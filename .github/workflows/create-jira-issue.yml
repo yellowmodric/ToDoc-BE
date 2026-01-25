@@ -19,14 +19,20 @@ jobs:
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
 
-      - name: Create Jira Issue
+      - name: Create Issue
         id: create
         uses: atlassian/gajira-create@v3
         with:
           project: SCRUM
           issuetype: Task
-          summary: ${{ github.event.issue.title }}
-          description: ${{ github.event.issue.body }}
+          summary: '${{ github.event.issue.title }}'
+          description: '${{ steps.md2jira.outputs.output-text }}'
+          fields: |
+            {
+              "parent": {
+                "key": "${{ steps.issue-parser.outputs.issueparser_parentKey }}"
+              }
+            }
 
       - name: Update GitHub issue title
         uses: actions-cool/issues-helper@v3
@@ -43,4 +49,4 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             🎫 Jira Issue Created  
-            👉 https://${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.create.outputs.issue }}
+            👉 ${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.create.outputs.issue }}
