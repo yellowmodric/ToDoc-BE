@@ -18,6 +18,11 @@ jobs:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          
+      - name: Checkout main code
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Issue Parser
         uses: stefanbuck/github-issue-parser@v3
