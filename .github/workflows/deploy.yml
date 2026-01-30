@@ -50,3 +50,16 @@ jobs:
         run: |
           docker push \
           ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
+
+      - name: SSH로 EC2에 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script_stop: true
+          script: |
+            docker stop todoc-server || true
+            docker rm todoc-server || true
+            docker pull ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
+            docker run -d --name todoc-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
