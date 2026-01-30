@@ -43,10 +43,10 @@ jobs:
 
       - name: Docker 이미지 태깅
         run: |
-          docker tag todoc-backend:latest \
-          ${{ steps.login-ecr.outputs.registry }}/todoc-backend:latest
+          docker tag todoc-server:latest \
+          ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
 
       - name: ECR에 이미지 push
         run: |
           docker push \
-          ${{ steps.login-ecr.outputs.registry }}/todoc-backend:latest
+          ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
