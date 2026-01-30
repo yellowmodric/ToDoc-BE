@@ -62,4 +62,9 @@ jobs:
             docker stop todoc-server || true
             docker rm todoc-server || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
-            docker run -d --name todoc-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
+            docker run -d \
+              --name todoc-server \
+              -p 8080:8080 \
+              --env-file /home/ubuntu/todoc.env \
+              ${{ steps.login-ecr.outputs.registry }}/todoc-server:latest
+
