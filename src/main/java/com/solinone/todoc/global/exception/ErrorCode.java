@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
+    //example (test)
+    EXAMPLE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "test001", "테스트 오류 발생"),
+
     //common (C)
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "서버에서 알 수 없는 오류가 발생했습니다"),
     INVALID_ARGUMENT_TYPE(HttpStatus.BAD_REQUEST, "C002", "요청 값 타입이 잘못되었습니다"),
