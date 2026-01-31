@@ -13,7 +13,7 @@ spring:
       hibernate:
         format_sql: true
 
-server.url: {SERVER_URL}
+server.url: ${SERVER_URL}
 
 springdoc:
   swagger-ui:
