@@ -1,0 +1,39 @@
+package com.solinone.todoc.place.domain;
+
+import com.solinone.todoc.global.common.BaseEntity;
+import com.solinone.todoc.user.domain.User;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "places")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Place extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long placeId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(nullable = false)
+    private String placeName;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PlaceType placeType;
+
+    @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
+    @Column(nullable = false)
+    private String address;
+}
