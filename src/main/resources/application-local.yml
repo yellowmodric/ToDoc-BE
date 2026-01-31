@@ -12,3 +12,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+server.url: ${SERVER_URL}
+
+springdoc:
+  swagger-ui:
+    enabled: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
