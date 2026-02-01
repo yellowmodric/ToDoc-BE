@@ -7,8 +7,6 @@ import com.solinone.todoc.user.dto.request.VisitorSignupRequest;
 import com.solinone.todoc.user.exception.DuplicateEmailException;
 import com.solinone.todoc.user.infrastructure.UserRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +31,7 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    private void validateDuplicateEmail(String email) {
+    public void validateDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new DuplicateEmailException(ErrorCode.DUPLICATE_EMAIL);
         }
