@@ -7,8 +7,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "places")
+@Table(name = "places",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"business_number", "address"})
+        })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Place extends BaseEntity {
@@ -36,4 +40,10 @@ public class Place extends BaseEntity {
 
     @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
+    private String businessNumber;
+
+    @Column(nullable = false)
+    private LocalDateTime openedAt;
 }
