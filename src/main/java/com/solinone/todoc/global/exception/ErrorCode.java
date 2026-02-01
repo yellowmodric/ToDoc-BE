@@ -16,8 +16,9 @@ public enum ErrorCode {
     INVALID_ARGUMENT_TYPE(HttpStatus.BAD_REQUEST, "C002", "요청 값 타입이 잘못되었습니다"),
     MISSING_REQUEST_PARAMETER(HttpStatus.BAD_REQUEST, "C003", "요청 값이 누락되었습니다"),
     INVALID_REQUEST_VALUE(HttpStatus.BAD_REQUEST, "C004", "요청 값이 잘못되었습니다"),
-    ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다");
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다"),
     //user (U)
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "U001", "이미 사용 중인 이메일입니다");
 
     //place (P)
 
