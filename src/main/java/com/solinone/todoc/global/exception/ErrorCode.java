@@ -18,9 +18,10 @@ public enum ErrorCode {
     INVALID_REQUEST_VALUE(HttpStatus.BAD_REQUEST, "C004", "요청 값이 잘못되었습니다"),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다"),
     //user (U)
-    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "U001", "이미 사용 중인 이메일입니다");
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "U001", "이미 사용 중인 이메일입니다"),
 
     //place (P)
+    INVALID_BUSINESS_NUMBER(HttpStatus.INTERNAL_SERVER_ERROR, "P001", "사업자번호 인증과정중 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;
