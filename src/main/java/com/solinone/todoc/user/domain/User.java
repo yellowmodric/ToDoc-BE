@@ -3,6 +3,7 @@ package com.solinone.todoc.user.domain;
 import com.solinone.todoc.global.common.DeletedBaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +21,7 @@ public class User extends DeletedBaseEntity {
         @Enumerated(EnumType.STRING)
         private UserRole role;
 
-        @Column(nullable = false)
+        @Column
         private String name;
 
         @Column(nullable = false)
@@ -31,4 +32,12 @@ public class User extends DeletedBaseEntity {
 
         @Column(nullable = false)
         private String nickname;
+
+        @Builder
+        public User(UserRole role, String nickname, String email, String password) {
+                this.role = role;
+                this.nickname = nickname;
+                this.email = email;
+                this.password = password;
+        }
 }
