@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,7 +86,7 @@ public class UserService {
             log.info("로그인 성공 - userId: {}, email: {} ", userDetails.getUserId(), request.getEmail());
 
             return LoginResponse.of(accessToken, jwtExpiration / 1000, userDetails);
-        } catch (Exception e) {
+        } catch (AuthenticationException e) {
             log.error("로그인 실패: {}", request.getEmail(), e);
             throw new InvalidCredentialException();
         }

@@ -39,10 +39,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (JwtException e) {
             log.warn("JWT 인증 실패: {}", e.getMessage());
             SecurityContextHolder.clearContext();
-            throw new InsufficientAuthenticationException("유효하지 않은 토큰입니다.", e);
         } catch (Exception e) {
             log.error("Security Context에 인증 정보를 설정할 수 없습니다.", e);
-            throw new InsufficientAuthenticationException("인증 실패");
+            SecurityContextHolder.clearContext();
         }
         filterChain.doFilter(request, response);
     }
