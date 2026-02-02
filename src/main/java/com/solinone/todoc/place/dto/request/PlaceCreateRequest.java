@@ -41,6 +41,7 @@ public class PlaceCreateRequest {
             example = "2026.02.02",
             description = "개업일 (yyyy.MM.dd 형식)"
     )
+    @NotNull
     private LocalDate openedAt;
 
     public static PlaceCreateRequest from(ProviderSignupRequest request) {
