@@ -19,9 +19,11 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다"),
     //user (U)
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "U001", "이미 사용 중인 이메일입니다"),
+    INVALID_CREDENTIALS_EXCEPTION(HttpStatus.BAD_REQUEST, "U002", "사용자 인증에 실패했습니다."),
 
     //place (P)
-    INVALID_BUSINESS_NUMBER(HttpStatus.INTERNAL_SERVER_ERROR, "P001", "사업자번호 인증과정중 오류가 발생했습니다.");
+    INVALID_BUSINESS_NUMBER(HttpStatus.INTERNAL_SERVER_ERROR, "P001", "사업자번호 인증과정중 오류가 발생했습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "P002", "사용자를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;
