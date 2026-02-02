@@ -1,7 +1,6 @@
 package com.solinone.todoc.infrastructure.business;
 
 import com.solinone.todoc.global.exception.ErrorCode;
-import com.solinone.todoc.infrastructure.business.dto.BusinessApiRequest;
 import com.solinone.todoc.infrastructure.business.dto.BusinessApiResponse;
 import com.solinone.todoc.infrastructure.business.exception.InvalidBusinessNumberException;
 import com.solinone.todoc.user.dto.response.BusinessVerificationResponse;
@@ -12,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +21,6 @@ import java.util.Map;
 public class BusinessRegistrationClient {
 
     private final WebClient webClient;
-    private final ObjectMapper objectMapper;
 
     @Value("${business.api.key}")
     private String apiKey;
