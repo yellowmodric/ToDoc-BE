@@ -1,6 +1,7 @@
 package com.solinone.todoc.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.solinone.todoc.place.domain.PlaceType;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,9 @@ public class ProviderSignupRequest {
 
     @NotBlank(message = "사업자등록번호는 필수입니다")
     private String businessNumber;
+
+    @NotNull(message = "가게유형은 필수입니다")
+    private PlaceType placeType;
 
     @NotBlank
     private String placeName;

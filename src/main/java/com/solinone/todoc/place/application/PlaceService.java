@@ -1,9 +1,12 @@
 package com.solinone.todoc.place.application;
 
 import com.solinone.todoc.place.domain.Place;
-import com.solinone.todoc.place.dto.PlaceCreateRequest;
+import com.solinone.todoc.place.domain.PlaceType;
+import com.solinone.todoc.place.dto.request.PlaceCreateRequest;
+import com.solinone.todoc.place.exception.DuplicatePlaceException;
 import com.solinone.todoc.place.infrastructure.PlaceRepository;
 import com.solinone.todoc.user.domain.User;
+import com.solinone.todoc.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,13 @@ import org.springframework.stereotype.Service;
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
+    private final UserRepository userRepository;
 
 
-    public void createPlace(User owner, PlaceCreateRequest request) {
+    public void createPlaceOnSignup(User owner, PlaceCreateRequest request) {
         log.info("가게 등록 시작 - 사용자: {}, 가게명: {}", owner.getUserId(), request.getPlaceName());
+
+        validateDuplicatePlace(request.getBusinessNumber(), request.getAddress());
 
         Place place = Place.builder()
                 .user(owner)
@@ -30,5 +36,30 @@ public class PlaceService {
                 .openedAt(request.getOpenedAt())
                 .build();
         placeRepository.save(place);
+    }
+
+
+    public void createPlaceByOwner(PlaceCreateRequest request, Long userId) {
+        User owner = userRepository.getReferenceById(userId);
+
+        validateDuplicatePlace(request.getBusinessNumber(), request.getAddress());
+
+        Place place = Place.builder()
+                .user(owner)
+                .placeName(request.getPlaceName())
+                .placeType(request.getPlaceType())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .address(request.getAddress())
+                .businessNumber(request.getBusinessNumber())
+                .openedAt(request.getOpenedAt())
+                .build();
+        placeRepository.save(place);
+    }
+    private void validateDuplicatePlace(String businessNumber, String address) {
+        if (placeRepository.existsByBusinessNumberAndAddress(businessNumber, address)) {
+            log.warn("중복 가게 등록 - businessNumber: {}, address: {}", businessNumber, address);
+            throw new DuplicatePlaceException();
+        }
     }
 }

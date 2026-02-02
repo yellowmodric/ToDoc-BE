@@ -64,6 +64,7 @@ public class UserController {
                   "email": "user@example.com",
                   "password": "stringst",
                   "businessNumber": "string",
+                  "placeType": "RESTAURANT",
                   "placeName": "string",
                   "address": "string",
                   "latitude": 0.1,

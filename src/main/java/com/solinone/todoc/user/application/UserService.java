@@ -1,10 +1,9 @@
 package com.solinone.todoc.user.application;
 
-import com.solinone.todoc.global.exception.ErrorCode;
 import com.solinone.todoc.global.security.CustomUserDetails;
 import com.solinone.todoc.global.security.jwt.JwtTokenProvider;
 import com.solinone.todoc.place.application.PlaceService;
-import com.solinone.todoc.place.dto.PlaceCreateRequest;
+import com.solinone.todoc.place.dto.request.PlaceCreateRequest;
 import com.solinone.todoc.user.domain.User;
 import com.solinone.todoc.user.dto.request.LoginRequest;
 import com.solinone.todoc.user.dto.request.ProviderSignupRequest;
@@ -70,7 +69,7 @@ public class UserService {
         log.info("사장님 회원가입 완료 - userId: {}" , savedUser.getUserId());
 
         PlaceCreateRequest placeRequest = PlaceCreateRequest.from(request);
-        placeService.createPlace(savedUser, placeRequest);
+        placeService.createPlaceOnSignup(savedUser, placeRequest);
     }
 
     public LoginResponse login(LoginRequest request) {
