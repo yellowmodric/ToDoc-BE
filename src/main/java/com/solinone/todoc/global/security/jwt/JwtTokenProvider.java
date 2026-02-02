@@ -49,6 +49,7 @@ public class JwtTokenProvider {
                 .claim("userId", userDetails.getUserId())
                 .claim("nickname", userDetails.getNickname())
                 .claim("role", role)
+                .claim("name", userDetails.getName())
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(secretKey, Jwts.SIG.HS512)
@@ -64,7 +65,8 @@ public class JwtTokenProvider {
     }
 
     public String getEmailFromToken(String token) {
-        return parseClaims(token).get("email", String.class);
+        Claims claims = parseClaims(token);
+        return claims.getSubject();
     }
 
     public boolean validateToken(String token) {
@@ -76,14 +78,17 @@ public class JwtTokenProvider {
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.error("잘못된 JWT 서명입니다.", e);
+            throw e;
         } catch (ExpiredJwtException e) {
             log.error("만료된 JWT 토큰입니다.", e);
+            throw e;
         } catch (UnsupportedJwtException e) {
             log.error("지원되지 않는 JWT 토큰입니다.", e);
+            throw e;
         } catch (IllegalArgumentException e) {
             log.error("JWT 토큰이 잘못되었습니다.", e);
+            throw e;
         }
-        return false;
     }
 
 

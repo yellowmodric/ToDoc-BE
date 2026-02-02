@@ -1,11 +1,13 @@
 package com.solinone.todoc.global.security.jwt;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,13 +28,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = getTokenFromRequest(request);
 
-            if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+            if (StringUtils.hasText(token)){
+                jwtTokenProvider.validateToken(token);
+
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
                 log.debug("인증 성공: {}", authentication.getName());
             }
+        } catch (JwtException e) {
+            log.warn("JWT 인증 실패: {}", e.getMessage());
+            SecurityContextHolder.clearContext();
+            throw new InsufficientAuthenticationException("유효하지 않은 토큰입니다.", e);
         } catch (Exception e) {
             log.error("Security Context에 인증 정보를 설정할 수 없습니다.", e);
+            throw new InsufficientAuthenticationException("인증 실패");
         }
         filterChain.doFilter(request, response);
     }
