@@ -4,6 +4,7 @@ import com.solinone.todoc.global.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -26,7 +27,16 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, e.getErrorCode().getHttpStatus());
     }
-    //TODO 스프링 시큐리티 추가후 접근 권한 없음 예외 추가
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        log.error("[예외 발생] : {}, {}, {}", ErrorCode.ACCESS_DENIED.getHttpStatus(), ErrorCode.ACCESS_DENIED.getErrorCode(), ErrorCode.ACCESS_DENIED.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(
+                ErrorCode.ACCESS_DENIED.getHttpStatus(),
+                ErrorCode.ACCESS_DENIED.getErrorCode(),
+                ErrorCode.ACCESS_DENIED.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
