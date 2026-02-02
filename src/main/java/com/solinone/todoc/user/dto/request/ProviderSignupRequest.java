@@ -2,6 +2,7 @@ package com.solinone.todoc.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solinone.todoc.place.domain.PlaceType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,5 +47,9 @@ public class ProviderSignupRequest {
     private Double longitude;
 
     @JsonFormat(pattern = "yyyy.MM.dd")
+    @Schema(
+            example = "2026.02.02",
+            description = "개업일 (yyyy.MM.dd 형식)"
+    )
     private LocalDate openedAt;
 }

@@ -3,6 +3,7 @@ package com.solinone.todoc.place.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.solinone.todoc.place.domain.PlaceType;
 import com.solinone.todoc.user.dto.request.ProviderSignupRequest;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,10 @@ public class PlaceCreateRequest {
     private String businessNumber;
 
     @JsonFormat(pattern = "yyyy.MM.dd")
+    @Schema(
+            example = "2026.02.02",
+            description = "개업일 (yyyy.MM.dd 형식)"
+    )
     private LocalDate openedAt;
 
     public static PlaceCreateRequest from(ProviderSignupRequest request) {

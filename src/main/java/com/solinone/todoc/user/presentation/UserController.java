@@ -49,33 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/signup/provider")
-    @Operation(
-            summary = "사장님 회원가입",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    required = true,
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    name = "사장님 회원가입 예시",
-                                    value = """
-                {
-                  "name": "string",
-                  "nickname": "string",
-                  "email": "user@example.com",
-                  "password": "stringst",
-                  "businessNumber": "string",
-                  "placeType": "RESTAURANT",
-                  "placeName": "string",
-                  "address": "string",
-                  "latitude": 0.1,
-                  "longitude": 0.1,
-                  "openedAt": "2026.02.02"
-                }
-                """
-                            )
-                    )
-            )
-    )
+    @Operation(summary = "사장님 회원가입")
     public ApiResponse<Void> signupProvider(@Valid @RequestBody ProviderSignupRequest request) {
         userService.signUpProvider(request);
         return new ApiResponse<>("회원가입이 완료되었습니다.", null);
