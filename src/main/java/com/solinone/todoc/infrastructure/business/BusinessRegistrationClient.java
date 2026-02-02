@@ -35,7 +35,6 @@ public class BusinessRegistrationClient {
             String url = UriComponentsBuilder.fromUriString(apiUrl)
                     .queryParam("serviceKey", apiKey)
                     .toUriString();
-            log.info("API URL: {}", url);
 
             Map<String, Object> requestBody = Map.of("b_no", List.of(businessNumber));
 

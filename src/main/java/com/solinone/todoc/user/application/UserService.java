@@ -23,6 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PlaceService placeService;
 
+    @Transactional
     public void signUpVisitor( VisitorSignupRequest request) {
         validateDuplicateEmail(request.getEmail());
 
