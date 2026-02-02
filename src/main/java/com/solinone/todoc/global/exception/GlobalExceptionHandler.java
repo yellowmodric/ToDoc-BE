@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
                 ErrorCode.ACCESS_DENIED.getErrorCode(),
                 ErrorCode.ACCESS_DENIED.getMessage()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(errorResponse, ErrorCode.ACCESS_DENIED.getHttpStatus());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
