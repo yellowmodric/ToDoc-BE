@@ -33,11 +33,32 @@ public class User extends DeletedBaseEntity {
         @Column(nullable = false)
         private String nickname;
 
-        @Builder
-        public User(UserRole role, String nickname, String email, String password) {
+        @Builder(access = AccessLevel.PRIVATE)
+        public User(UserRole role,String name, String nickname, String email, String password) {
                 this.role = role;
+                this.name = name;
                 this.nickname = nickname;
                 this.email = email;
                 this.password = password;
+        }
+
+        public static User createVisitor(String nickname, String email, String password) {
+                return User.builder()
+                        .role(UserRole.VISITOR)
+                        .name(null)
+                        .nickname(nickname)
+                        .email(email)
+                        .password(password)
+                        .build();
+        }
+
+        public static User createProvider(String name, String nickname, String email, String password) {
+                return User.builder()
+                        .role(UserRole.PROVIDER)
+                        .name(name)
+                        .nickname(nickname)
+                        .email(email)
+                        .password(password)
+                        .build();
         }
 }

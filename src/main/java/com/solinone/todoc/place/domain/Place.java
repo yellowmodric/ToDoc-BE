@@ -4,10 +4,11 @@ import com.solinone.todoc.global.common.BaseEntity;
 import com.solinone.todoc.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "places",
@@ -45,5 +46,25 @@ public class Place extends BaseEntity {
     private String businessNumber;
 
     @Column(nullable = false)
-    private LocalDateTime openedAt;
+    private LocalDate openedAt;
+
+    @Builder
+    public Place(
+            User user,
+            String placeName,
+            PlaceType placeType,
+            Double latitude,
+            Double longitude,
+            String address,
+            String businessNumber,
+            LocalDate openedAt) {
+        this.user = user;
+        this.placeName = placeName;
+        this.placeType = placeType;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.businessNumber = businessNumber;
+        this.openedAt = openedAt;
+    }
 }
