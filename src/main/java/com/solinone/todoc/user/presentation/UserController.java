@@ -3,11 +3,9 @@ package com.solinone.todoc.user.presentation;
 import com.solinone.todoc.global.response.ApiResponse;
 import com.solinone.todoc.infrastructure.business.BusinessRegistrationClient;
 import com.solinone.todoc.user.application.UserService;
-import com.solinone.todoc.user.dto.request.BusinessVerificationRequest;
-import com.solinone.todoc.user.dto.request.EmailCheckRequest;
-import com.solinone.todoc.user.dto.request.ProviderSignupRequest;
-import com.solinone.todoc.user.dto.request.VisitorSignupRequest;
+import com.solinone.todoc.user.dto.request.*;
 import com.solinone.todoc.user.dto.response.BusinessVerificationResponse;
+import com.solinone.todoc.user.dto.response.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -25,13 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "회원", description = "회원관리 API")
 public class UserController {
 
-    private final UserService authService;
+    private final UserService userService;
     private final BusinessRegistrationClient businessClient;
 
     @PostMapping("/email/check")
     @Operation(summary = "이메일 중복체크")
     public ApiResponse<Void> checkEmail(@Valid @RequestBody EmailCheckRequest request) {
-        authService.validateDuplicateEmail(request.getEmail());
+        userService.validateDuplicateEmail(request.getEmail());
         return new ApiResponse<>("사용 가능한 이메일입니다.", null);
     }
 
@@ -46,7 +44,7 @@ public class UserController {
     @PostMapping("/signup/visitor")
     @Operation(summary = "사용자 회원가입")
     public ApiResponse<Void> signupVisitor(@Valid @RequestBody VisitorSignupRequest request) {
-        authService.signUpVisitor(request);
+        userService.signUpVisitor(request);
         return new ApiResponse<>("회원가입이 완료되었습니다.", null);
     }
 
@@ -78,7 +76,14 @@ public class UserController {
             )
     )
     public ApiResponse<Void> signupProvider(@Valid @RequestBody ProviderSignupRequest request) {
-        authService.signUpProvider(request);
+        userService.signUpProvider(request);
         return new ApiResponse<>("회원가입이 완료되었습니다.", null);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "로그인")
+    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = userService.login(request);
+        return ApiResponse.success(response);
     }
 }
