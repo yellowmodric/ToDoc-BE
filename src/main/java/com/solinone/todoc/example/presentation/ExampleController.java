@@ -55,13 +55,13 @@ public class ExampleController {
     @GetMapping("/auth/userinfo")
     @Operation(summary = "jwt토큰에서 사용자 정보 추출")
     public ApiResponse<Map<String, Object>> getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        // userDetails값은 되도록 service단에서 처리
+        // userDetails값은 되도록 컨트롤러단에서 처리
         Map<String, Object> data = new HashMap<>();
-        data.put("userId",  userDetails.getUserId());
-        data.put("email", userDetails.getUsername());
-        data.put("nickname", userDetails.getNickname());
-        data.put("role", userDetails.getUser().getRole());
-        data.put("name", userDetails.getName());
+        data.put("userId",  userDetails.getUserId()); //userId
+        data.put("email", userDetails.getUsername()); //이메일
+        data.put("nickname", userDetails.getNickname()); //닉네임
+        data.put("role", userDetails.getUser().getRole()); //VISITOR or PROVIDER
+        data.put("name", userDetails.getName()); //이름
         return ApiResponse.success(data);
     }
 

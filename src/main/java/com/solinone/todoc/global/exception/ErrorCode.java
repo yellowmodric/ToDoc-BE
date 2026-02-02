@@ -23,7 +23,8 @@ public enum ErrorCode {
 
     //place (P)
     INVALID_BUSINESS_NUMBER(HttpStatus.INTERNAL_SERVER_ERROR, "P001", "사업자번호 인증과정중 오류가 발생했습니다."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "P002", "사용자를 찾을 수 없습니다.");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "P002", "사용자를 찾을 수 없습니다."),
+    DUPLICATE_PLACE(HttpStatus.BAD_REQUEST, "P003", "같은 사업자번호와 주소로 이미 등록된 가게가 있습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;
