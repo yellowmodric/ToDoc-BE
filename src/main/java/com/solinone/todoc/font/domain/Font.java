@@ -1,5 +1,6 @@
 package com.solinone.todoc.font.domain;
 
+import com.solinone.todoc.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "fonts")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Font {
+public class Font extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fontId;
