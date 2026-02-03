@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface FontRepository extends JpaRepository<Font, Long> {
     List<Font> findByCategory(FontCategory category);
+    List<Font> findByCategoryIn(List<FontCategory> categories);
 }
