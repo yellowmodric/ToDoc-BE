@@ -14,6 +14,7 @@ spring:
         format_sql: true
 
 server.url: ${SERVER_URL}
+domain.url: ${DOMAIN_URL}
 jwt.secret: ${JWT_SECRET}
 jwt.expiration: ${JWT_EXPIRATION}
 

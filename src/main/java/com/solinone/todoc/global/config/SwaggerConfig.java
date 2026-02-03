@@ -17,6 +17,9 @@ public class SwaggerConfig {
     @Value("${server.url}")
     private String serverUrl;
 
+    @Value("${domain.url}")
+    private String domainUrl;
+
     @Bean
     public OpenAPI openAPI() {
         String securitySchemeName = "BearerAuth";
@@ -46,7 +49,7 @@ public class SwaggerConfig {
                         .url(serverUrl)
                         .description("로컬 개발 서버"),
                 new Server()
-                        .url(serverUrl)
+                        .url(domainUrl)
                         .description("배포 서버")
         );
     }
