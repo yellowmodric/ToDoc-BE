@@ -62,8 +62,9 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "http://127.0.0.1:5173"
-                //TODO 추후에 배포 도메인 주소 추가하기
+                "http://127.0.0.1:5173",
+                "https://todoc.site",
+                "http://todoc.site"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
