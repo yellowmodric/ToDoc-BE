@@ -26,5 +26,8 @@ public class Board extends BaseEntity {
     private Theme theme;
 
     @Column(nullable = false)
+    private String boardColor;
+
+    @Column
     private String qrUrl;
 }
