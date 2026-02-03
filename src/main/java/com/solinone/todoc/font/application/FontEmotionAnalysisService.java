@@ -3,12 +3,14 @@ package com.solinone.todoc.font.application;
 import com.solinone.todoc.font.domain.FontCategory;
 import com.solinone.todoc.font.dto.response.FontCategoryAnalysisResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FontEmotionAnalysisService {
@@ -22,7 +24,8 @@ public class FontEmotionAnalysisService {
                 .user(prompt)
                 .call()
                 .content();
-
+        log.info("[FontEmotionAnalysis] input='{}'", content);
+        log.info("[FontEmotionAnalysis] raw AI response={}", response);
         try {
             FontCategoryAnalysisResponse result =
                     objectMapper.readValue(response, FontCategoryAnalysisResponse.class);
