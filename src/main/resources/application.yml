@@ -8,6 +8,13 @@ spring:
   jackson:
     time-zone: Asia/Seoul
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+
 springdoc:
   api-docs:
     path: /api-docs
