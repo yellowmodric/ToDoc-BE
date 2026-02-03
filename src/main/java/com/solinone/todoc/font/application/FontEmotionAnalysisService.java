@@ -20,13 +20,12 @@ public class FontEmotionAnalysisService {
     public List<FontCategory> analyze(String content) {
         String prompt = buildPrompt(content);
 
-        String response = chatClient.prompt()
-                .user(prompt)
-                .call()
-                .content();
-        log.info("[FontEmotionAnalysis] input='{}'", content);
-        log.info("[FontEmotionAnalysis] raw AI response={}", response);
         try {
+            String response = chatClient.prompt()
+                    .user(prompt)
+                    .call()
+                    .content();
+
             FontCategoryAnalysisResponse result =
                     objectMapper.readValue(response, FontCategoryAnalysisResponse.class);
             return result.getCategories();
