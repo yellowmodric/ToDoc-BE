@@ -3,11 +3,13 @@ package com.solinone.todoc.font.presentation;
 import com.solinone.todoc.font.application.FontEmotionAnalysisService;
 import com.solinone.todoc.font.application.FontRecommendationService;
 import com.solinone.todoc.font.application.FontService;
+import com.solinone.todoc.font.domain.AnalysisType;
 import com.solinone.todoc.font.domain.FontCategory;
 import com.solinone.todoc.font.dto.request.FontAutoRecommendRequest;
 import com.solinone.todoc.font.dto.response.FontAutoRecommendResponse;
 import com.solinone.todoc.font.dto.response.FontResponse;
 import com.solinone.todoc.global.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,7 @@ public class FontController {
     private final FontRecommendationService fontRecommendationService;
 
     @GetMapping
+    @Operation(summary = "카테고리별 폰트 조회")
     public ApiResponse<List<FontResponse>> getFonts(
             @RequestParam(required = false)FontCategory category
             ) {
@@ -37,12 +40,13 @@ public class FontController {
     }
 
     @PostMapping("/recommend/auto")
+    @Operation(summary = "방명록 내용 기반 AI 폰트 추천")
     public ApiResponse<FontAutoRecommendResponse> autoRecommend (
             @Valid @RequestBody FontAutoRecommendRequest request
             ) {
-        //1. AI 감정 분석(내부용)
+        //1. AI 감정 분석(방명록 내용 기반)
         List<FontCategory> categories =
-                fontEmotionAnalysisService.analyze(request.getContent());
+                fontEmotionAnalysisService.analyze(request.getContent(), AnalysisType.GUESTBOOK);
 
         //2. 폰트 추천
         List<FontResponse> fonts =
@@ -52,6 +56,28 @@ public class FontController {
                         .toList();
 
         //3. UI 기준 응답
+        return ApiResponse.success(
+                FontAutoRecommendResponse.of(fonts)
+        );
+    }
+
+    @GetMapping("/recommend/search")
+    @Operation(summary = "검색어 기반 AI 폰트 추천")
+    public ApiResponse<FontAutoRecommendResponse> searchRecommend (
+            @RequestParam String query
+    ) {
+        //1. AI 분석(검색어 기반)
+        List<FontCategory> categories =
+                fontEmotionAnalysisService.analyze(query, AnalysisType.SEARCH);
+
+        //2. 폰트 추천
+        List<FontResponse> fonts =
+                fontRecommendationService.recommend(categories)
+                        .stream()
+                        .map(FontResponse::from)
+                        .toList();
+
+        //3. 응답
         return ApiResponse.success(
                 FontAutoRecommendResponse.of(fonts)
         );
