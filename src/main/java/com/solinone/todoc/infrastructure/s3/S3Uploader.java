@@ -46,7 +46,7 @@ public class S3Uploader {
         s3Client.putObject(putRequest, RequestBody.fromBytes(imageBytes));
 
         String url = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, key);
-        log.info("QR이미지 S3 업로드 완료 - boardId: {}, url: {}", placeId, url);
+        log.info("QR이미지 S3 업로드 완료 - placeId: {}, url: {}", placeId, url);
         return url;
     }
 }

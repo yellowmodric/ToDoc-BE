@@ -28,7 +28,7 @@ aws:
 
 app:
   qr:
-    base-url: http://localhost:5173/home/visitor
+    base-url: ${QR_BASE_URL}
 
 springdoc:
   swagger-ui:
