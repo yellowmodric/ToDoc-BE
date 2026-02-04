@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -17,6 +17,18 @@ server.url: ${SERVER_URL}
 domain.url: ${DOMAIN_URL}
 jwt.secret: ${JWT_SECRET}
 jwt.expiration: ${JWT_EXPIRATION}
+
+aws:
+  s3:
+    access-key: ${S3_ACCESS_KEY}
+    secret-key: ${S3_SECRET_KEY}
+    region: ap-northeast-2
+    bucket: todocbucket
+    qr-path: qr
+
+app:
+  qr:
+    base-url: http://localhost:5173/home/visitor
 
 springdoc:
   swagger-ui:
