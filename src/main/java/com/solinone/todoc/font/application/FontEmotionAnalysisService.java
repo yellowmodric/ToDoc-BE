@@ -31,8 +31,7 @@ public class FontEmotionAnalysisService {
 
             FontCategoryAnalysisResponse result =
                     objectMapper.readValue(response, FontCategoryAnalysisResponse.class);
-            log.info("[FontEmotionAnalysis] input='{}'", input);
-            log.info("[FontEmotionAnalysis] raw AI response={}", response);
+
             return result.getCategories();
         } catch (Exception e) {
             //AI 실패 시 fallback

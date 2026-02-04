@@ -16,8 +16,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FontAutoRecommendService {
     private final FontRecommendationService recommendationService;
-    private final FontReasonGenerateService generateService;
-    private final FontReasonPromptFactory fontReasonPromptFactory;
     private final FontReasonGenerateService fontReasonGenerateService;
 
     public List<FontResponse> recommend(
