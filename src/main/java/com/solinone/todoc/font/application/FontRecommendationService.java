@@ -26,11 +26,11 @@ public class FontRecommendationService {
             int quota = CATEGORY_QUOTA[i];
 
             addFontsByCategory(result, category, quota);
+        }
 
-            //만약 추천 태그 데이터가 부족할 때
-            if (result.size() < RECOMMEND_COUNT) {
-                fillWithFallback(result);
-            }
+        //만약 추천 태그 데이터가 부족할 때
+        if (result.size() < RECOMMEND_COUNT) {
+            fillWithFallback(result, categories);
         }
 
         return result;
@@ -63,15 +63,18 @@ public class FontRecommendationService {
     }
 
     //전체 조회해서 아무거나 추천
-    private void fillWithFallback(List<Font> result) {
-        List<Font> fallbackFonts = fontRepository.findAll();
-        Collections.shuffle(fallbackFonts);
-
-        for (Font font : fallbackFonts) {
+    private void fillWithFallback(List<Font> result, List<FontCategory> categories) {
+        for (FontCategory category : categories) {
             if (result.size() >= RECOMMEND_COUNT) break;
 
-            if (!contains(result, font)) {
-                result.add(font);
+            List<Font> fonts = fontRepository.findByCategory(category);
+            Collections.shuffle(fonts);
+
+            for (Font font : fonts) {
+                if (result.size() >= RECOMMEND_COUNT) break;
+                if (!contains(result, font)) {
+                    result.add(font);
+                }
             }
         }
     }
