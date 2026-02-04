@@ -3,6 +3,7 @@ package com.solinone.todoc.board.domain;
 import com.solinone.todoc.global.common.BaseEntity;
 import com.solinone.todoc.place.domain.Place;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,17 @@ public class Board extends BaseEntity {
     private Theme theme;
 
     @Column(nullable = false)
+    private String boardColor;
+
+    @Column
     private String qrUrl;
+
+    public static Board create(Place place, Theme theme, String boardColor, String qrUrl) {
+        Board board = new Board();
+        board.place = place;
+        board.theme = theme;
+        board.boardColor = boardColor;
+        board.qrUrl = qrUrl;
+        return board;
+    }
 }
