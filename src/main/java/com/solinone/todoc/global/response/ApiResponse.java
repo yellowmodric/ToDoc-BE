@@ -1,23 +1,22 @@
 package com.solinone.todoc.global.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
-    private String message;
+    private ApiStatus status;
     private T data;
 
-    public ApiResponse(T data) {
-        this.message = "success";
-        this.data = data;
-    }
-
     public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(data);
+        ApiResponse<T> response = new ApiResponse<>();
+        response.status = ApiStatus.SUCCESS;
+        response.data = data;
+        return response;
     }
 }

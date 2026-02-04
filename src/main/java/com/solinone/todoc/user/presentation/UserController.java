@@ -1,14 +1,13 @@
 package com.solinone.todoc.user.presentation;
 
 import com.solinone.todoc.global.response.ApiResponse;
+import com.solinone.todoc.global.response.MessageResponse;
 import com.solinone.todoc.infrastructure.business.BusinessRegistrationClient;
 import com.solinone.todoc.user.application.UserService;
 import com.solinone.todoc.user.dto.request.*;
 import com.solinone.todoc.user.dto.response.BusinessVerificationResponse;
 import com.solinone.todoc.user.dto.response.LoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +27,9 @@ public class UserController {
 
     @PostMapping("/email/check")
     @Operation(summary = "이메일 중복체크")
-    public ApiResponse<Void> checkEmail(@Valid @RequestBody EmailCheckRequest request) {
+    public ApiResponse<MessageResponse> checkEmail(@Valid @RequestBody EmailCheckRequest request) {
         userService.validateDuplicateEmail(request.getEmail());
-        return new ApiResponse<>("사용 가능한 이메일입니다.", null);
+        return ApiResponse.success(new MessageResponse("사용 가능 이메일입니다."));
     }
 
     @PostMapping("/business/verify")
@@ -43,16 +42,16 @@ public class UserController {
 
     @PostMapping("/signup/visitor")
     @Operation(summary = "사용자 회원가입")
-    public ApiResponse<Void> signupVisitor(@Valid @RequestBody VisitorSignupRequest request) {
+    public ApiResponse<MessageResponse> signupVisitor(@Valid @RequestBody VisitorSignupRequest request) {
         userService.signUpVisitor(request);
-        return new ApiResponse<>("회원가입이 완료되었습니다.", null);
+        return ApiResponse.success(new MessageResponse("회원가입이 완료되었습니다."));
     }
 
     @PostMapping("/signup/provider")
     @Operation(summary = "사장님 회원가입")
-    public ApiResponse<Void> signupProvider(@Valid @RequestBody ProviderSignupRequest request) {
+    public ApiResponse<MessageResponse> signupProvider(@Valid @RequestBody ProviderSignupRequest request) {
         userService.signUpProvider(request);
-        return new ApiResponse<>("회원가입이 완료되었습니다.", null);
+        return ApiResponse.success(new MessageResponse("회원가입이 완료되었습니다."));
     }
 
     @PostMapping("/login")

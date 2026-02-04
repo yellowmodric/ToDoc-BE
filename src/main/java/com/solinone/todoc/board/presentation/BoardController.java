@@ -5,6 +5,7 @@ import com.solinone.todoc.board.application.ThemeService;
 import com.solinone.todoc.board.dto.request.BoardCreateRequest;
 import com.solinone.todoc.board.dto.response.ThemeResponse;
 import com.solinone.todoc.global.response.ApiResponse;
+import com.solinone.todoc.global.response.MessageResponse;
 import com.solinone.todoc.global.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,9 +37,9 @@ public class BoardController {
     @PostMapping("/boards")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "방명록 판 생성")
-    public ApiResponse<Void> createBoard(@Valid @RequestBody BoardCreateRequest request,
-                                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ApiResponse<MessageResponse> createBoard(@Valid @RequestBody BoardCreateRequest request,
+                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
         boardService.createBoard(request,userDetails.getUserId());
-        return new ApiResponse<>("방명록 판이 생성되었습니다", null);
+        return ApiResponse.success(new MessageResponse("방명록 판이 생성되었습니다."));
     }
 }

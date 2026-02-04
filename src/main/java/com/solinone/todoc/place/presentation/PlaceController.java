@@ -1,6 +1,7 @@
 package com.solinone.todoc.place.presentation;
 
 import com.solinone.todoc.global.response.ApiResponse;
+import com.solinone.todoc.global.response.MessageResponse;
 import com.solinone.todoc.global.security.CustomUserDetails;
 import com.solinone.todoc.place.application.PlaceService;
 import com.solinone.todoc.place.dto.request.PlaceCreateRequest;
@@ -26,8 +27,8 @@ public class PlaceController {
     @PostMapping("/register")
     @PreAuthorize("hasAnyRole('PROVIDER')")
     @Operation(summary = "가게 추가 등록")
-    public ApiResponse<Void> register(@Valid @RequestBody PlaceCreateRequest request, @AuthenticationPrincipal CustomUserDetails user) {
+    public ApiResponse<MessageResponse> register(@Valid @RequestBody PlaceCreateRequest request, @AuthenticationPrincipal CustomUserDetails user) {
         placeService.createPlaceByOwner(request, user.getUserId());
-        return ApiResponse.success(null);
+        return ApiResponse.success(new MessageResponse("가게 등록이 완료되었습니다."));
     }
 }
