@@ -32,7 +32,12 @@ public enum ErrorCode {
     PLACE_USER_MISMATCH(HttpStatus.BAD_REQUEST, "P005", "가게와 사장님이 일치하지 않습니다."),
 
     //theme (T)
-    THEME_NOT_FOUND(HttpStatus.NOT_FOUND, "T001", "테마를 찾을 수 없습니다.");
+    THEME_NOT_FOUND(HttpStatus.NOT_FOUND, "T001", "테마를 찾을 수 없습니다."),
+
+    //fonts (F)
+    INVALID_FONT_CATEGORY(HttpStatus.BAD_REQUEST, "F001", "유효하지 않은 폰트 카테고리입니다"),
+    FONT_RECOMMEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "F002", "폰트 추천에 실패했습니다");
+
 
     private final HttpStatus httpStatus;
     private final String errorCode;
