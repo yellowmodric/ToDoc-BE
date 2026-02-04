@@ -40,6 +40,6 @@ public class BoardController {
     public ApiResponse<MessageResponse> createBoard(@Valid @RequestBody BoardCreateRequest request,
                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
         boardService.createBoard(request,userDetails.getUserId());
-        return ApiResponse.success(new MessageResponse("방명록 판이 생성되었습니다"));
+        return ApiResponse.success(new MessageResponse("방명록 판이 생성되었습니다."));
     }
 }
