@@ -1,5 +1,6 @@
 package com.solinone.todoc.font.presentation;
 
+import com.solinone.todoc.font.application.FontAutoRecommendService;
 import com.solinone.todoc.font.application.FontEmotionAnalysisService;
 import com.solinone.todoc.font.application.FontRecommendationService;
 import com.solinone.todoc.font.application.FontService;
@@ -26,7 +27,7 @@ import java.util.List;
 public class FontController {
     private final FontService fontService;
     private final FontEmotionAnalysisService fontEmotionAnalysisService;
-    private final FontRecommendationService fontRecommendationService;
+    private final FontAutoRecommendService fontAutoRecommendService;
 
     @GetMapping
     @Operation(summary = "카테고리별 폰트 조회")
@@ -50,10 +51,10 @@ public class FontController {
 
         //2. 폰트 추천
         List<FontResponse> fonts =
-                fontRecommendationService.recommend(categories)
-                        .stream()
-                        .map(FontResponse::from)
-                        .toList();
+                fontAutoRecommendService.recommend(
+                        request.getContent(),
+                        categories
+                        );
 
         //3. UI 기준 응답
         return ApiResponse.success(
@@ -72,10 +73,10 @@ public class FontController {
 
         //2. 폰트 추천
         List<FontResponse> fonts =
-                fontRecommendationService.recommend(categories)
-                        .stream()
-                        .map(FontResponse::from)
-                        .toList();
+                fontAutoRecommendService.recommend(
+                        query,
+                        categories
+                );
 
         //3. 응답
         return ApiResponse.success(

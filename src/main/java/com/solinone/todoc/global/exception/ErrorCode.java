@@ -36,8 +36,8 @@ public enum ErrorCode {
 
     //fonts (F)
     INVALID_FONT_CATEGORY(HttpStatus.BAD_REQUEST, "F001", "유효하지 않은 폰트 카테고리입니다"),
-    FONT_RECOMMEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "F002", "폰트 추천에 실패했습니다");
-
+    FONT_RECOMMEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "F002", "폰트 추천에 실패했습니다"),
+    FONT_REASON_GENERATE_FAIL(HttpStatus.OK, "F003", "추천 이유를 생성하지 못했습니다");
 
     private final HttpStatus httpStatus;
     private final String errorCode;

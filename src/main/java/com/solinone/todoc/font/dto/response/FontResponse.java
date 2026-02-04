@@ -14,6 +14,7 @@ public class FontResponse {
     private String fontNameEng;
     private FontCategory category;
     private FontField field;
+    private String reason;
 
     public static FontResponse from(Font font) {
         return FontResponse.builder()
@@ -22,6 +23,17 @@ public class FontResponse {
                 .fontNameEng(font.getFontNameEng())
                 .category(font.getCategory())
                 .field(font.getField())
+                .build();
+    }
+
+    public static FontResponse from(Font font, String reason) {
+        return FontResponse.builder()
+                .fontId(font.getFontId())
+                .fontName(font.getFontName())
+                .fontNameEng(font.getFontNameEng())
+                .category(font.getCategory())
+                .field(font.getField())
+                .reason(reason)
                 .build();
     }
 }
