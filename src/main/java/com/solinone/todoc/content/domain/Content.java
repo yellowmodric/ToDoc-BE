@@ -40,4 +40,16 @@ public class Content extends BaseEntity {
 
     @Column(nullable = false)
     private String fontColor;
+
+    public static Content create(Board board, User user, Font font,
+                                  String content, String postColor, String fontColor) {
+        Content newContent = new Content();
+        newContent.board = board;
+        newContent.user = user;
+        newContent.font = font;
+        newContent.content = content;
+        newContent.postColor = postColor;
+        newContent.fontColor = fontColor;
+        return newContent;
+    }
 }

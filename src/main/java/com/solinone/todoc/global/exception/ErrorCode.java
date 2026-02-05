@@ -13,6 +13,7 @@ public enum ErrorCode {
 
     //board (B)
     BOARD_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "B001", "이미 방명록 판이 존재하는 가게입니다."),
+    BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "B002", "방명록 판이 존재하지 않습니다."),
 
     //common (C)
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C001", "서버에서 알 수 없는 오류가 발생했습니다"),
@@ -20,6 +21,10 @@ public enum ErrorCode {
     MISSING_REQUEST_PARAMETER(HttpStatus.BAD_REQUEST, "C003", "요청 값이 누락되었습니다"),
     INVALID_REQUEST_VALUE(HttpStatus.BAD_REQUEST, "C004", "요청 값이 잘못되었습니다"),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "C005", "접근 권한이 없습니다"),
+
+    //content (CT)
+    CONTENT_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "CT001", "방명록 생성자는 방명록 작성이 불가합니다."),
+
     //user (U)
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "U001", "이미 사용 중인 이메일입니다"),
     INVALID_CREDENTIALS_EXCEPTION(HttpStatus.BAD_REQUEST, "U002", "사용자 인증에 실패했습니다."),
@@ -37,7 +42,8 @@ public enum ErrorCode {
     //fonts (F)
     INVALID_FONT_CATEGORY(HttpStatus.BAD_REQUEST, "F001", "유효하지 않은 폰트 카테고리입니다"),
     FONT_RECOMMEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "F002", "폰트 추천에 실패했습니다"),
-    FONT_REASON_GENERATE_FAIL(HttpStatus.OK, "F003", "추천 이유를 생성하지 못했습니다");
+    FONT_REASON_GENERATE_FAIL(HttpStatus.OK, "F003", "추천 이유를 생성하지 못했습니다"),
+    FONT_NOT_FOUND(HttpStatus.NOT_FOUND, "F004", "폰트를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorCode;
