@@ -43,6 +43,9 @@ public class Place extends BaseEntity {
     private String address;
 
     @Column(nullable = false)
+    private String zoneCode;
+
+    @Column(nullable = false)
     private String businessNumber;
 
     @Column(nullable = false)
@@ -56,6 +59,7 @@ public class Place extends BaseEntity {
             Double latitude,
             Double longitude,
             String address,
+            String zoneCode,
             String businessNumber,
             LocalDate openedAt) {
         this.user = user;
@@ -64,6 +68,7 @@ public class Place extends BaseEntity {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+        this.zoneCode = zoneCode;
         this.businessNumber = businessNumber;
         this.openedAt = openedAt;
     }

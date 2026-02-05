@@ -65,6 +65,7 @@ public class PlaceService {
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .address(request.getAddress())
+                .zoneCode(request.getZoneCode())
                 .businessNumber(request.getBusinessNumber())
                 .openedAt(request.getOpenedAt())
                 .build();

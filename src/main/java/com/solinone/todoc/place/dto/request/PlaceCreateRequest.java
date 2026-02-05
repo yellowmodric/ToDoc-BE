@@ -33,6 +33,9 @@ public class PlaceCreateRequest {
     @NotBlank(message = "주소는 필수입니다")
     private String address;
 
+    @NotNull(message = "우편번호는 필수입니다")
+    private String zoneCode;
+
     @NotBlank(message = "사업자등록번호는 필수입니다")
     private String businessNumber;
 
@@ -51,6 +54,7 @@ public class PlaceCreateRequest {
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .address(request.getAddress())
+                .zoneCode(request.getZoneCode())
                 .businessNumber(request.getBusinessNumber())
                 .openedAt(request.getOpenedAt())
                 .build();
