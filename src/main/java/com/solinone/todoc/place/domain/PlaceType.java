@@ -1,5 +1,5 @@
 package com.solinone.todoc.place.domain;
 
 public enum PlaceType {
-    RESTAURANT, CAFE, OTHER
+    RESTAURANT, CAFE, BANK, MART, CONVENIENCE_STORE, OTHER
 }

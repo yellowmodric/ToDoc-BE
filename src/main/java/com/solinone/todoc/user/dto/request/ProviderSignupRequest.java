@@ -40,6 +40,9 @@ public class ProviderSignupRequest {
     @NotBlank
     private String address;
 
+    @NotBlank
+    private String zoneCode;
+
     @NotNull
     private Double latitude;
 
