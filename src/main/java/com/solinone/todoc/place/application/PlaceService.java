@@ -2,6 +2,7 @@ package com.solinone.todoc.place.application;
 
 import com.solinone.todoc.place.domain.Place;
 import com.solinone.todoc.place.dto.request.PlaceCreateRequest;
+import com.solinone.todoc.place.dto.response.PlaceResponse;
 import com.solinone.todoc.place.exception.DuplicatePlaceException;
 import com.solinone.todoc.place.infrastructure.PlaceRepository;
 import com.solinone.todoc.user.domain.User;
@@ -9,6 +10,9 @@ import com.solinone.todoc.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,16 @@ public class PlaceService {
 
         Place place = buildPlace(owner, request);
         placeRepository.save(place);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceResponse> getMyPlaces(Long userId) {
+        return placeRepository.findByUser_UserIdOrderByCreatedAtDesc(userId).stream()
+                .map(place -> new PlaceResponse(
+                        place.getPlaceId(),
+                        place.getPlaceName()
+                ))
+                .toList();
     }
 
     private void validateDuplicatePlace(String businessNumber, String address) {
