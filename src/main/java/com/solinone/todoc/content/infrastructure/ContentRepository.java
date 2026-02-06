@@ -2,6 +2,7 @@ package com.solinone.todoc.content.infrastructure;
 
 import com.solinone.todoc.content.domain.Content;
 import com.solinone.todoc.content.dto.response.MyLatestContentResponse;
+import com.solinone.todoc.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -48,5 +49,11 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
             @Param("placeId") Long placeId
     );
 
+    List<Content> findByBoard_Place_PlaceIdAndUser_UserIdOrderByCreatedAtDesc(
+            Long placeId,
+            Long userId
+    );
+
+    Long user(User user);
     List<Content> findAllByBoardBoardId(Long boardId);
 }
