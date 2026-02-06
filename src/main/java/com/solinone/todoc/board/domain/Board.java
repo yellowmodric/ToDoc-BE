@@ -26,17 +26,13 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "theme_id", nullable = false)
     private Theme theme;
 
-    @Column(nullable = false)
-    private String boardColor;
-
     @Column
     private String qrUrl;
 
-    public static Board create(Place place, Theme theme, String boardColor, String qrUrl) {
+    public static Board create(Place place, Theme theme, String qrUrl) {
         Board board = new Board();
         board.place = place;
         board.theme = theme;
-        board.boardColor = boardColor;
         board.qrUrl = qrUrl;
         return board;
     }
