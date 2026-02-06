@@ -4,6 +4,7 @@ import com.solinone.todoc.content.dto.response.MyLatestContentResponse;
 import com.solinone.todoc.content.infrastructure.ContentRepository;
 import com.solinone.todoc.place.dto.response.MyContentStatus;
 import com.solinone.todoc.place.dto.response.PlaceMapResponse;
+import com.solinone.todoc.place.dto.response.ShowUiType;
 import com.solinone.todoc.place.infrastructure.PlaceRepository;
 import com.solinone.todoc.place.util.DistanceUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class PlaceMapService {
     private final ContentRepository contentRepository;
 
     public List<PlaceMapResponse> getNearbyPlaces(
-            Long userId, double lat, double lng, int radius
+            Long userId, double lat, double lng, int radius, ShowUiType ui
     ) {
         List<PlaceMapResponse> places =
                 placeRepository.findNearbyPlaces(lat, lng, radius)
@@ -50,13 +51,17 @@ public class PlaceMapService {
                         ));
 
         //3. 가장 가까운 매장 1개 계산
-        PlaceMapResponse nearest = places.stream()
-                .min(Comparator.comparing(p ->
-                        DistanceUtil.distance(
-                                lat, lng,
-                                p.getLatitude(), p.getLongitude())
-                ))
-                .orElse(null);
+        PlaceMapResponse nearest = null;
+
+        if (ui == ShowUiType.MAP) {
+            nearest = places.stream()
+                    .min(Comparator.comparing(p ->
+                            DistanceUtil.distance(
+                                    lat, lng,
+                                    p.getLatitude(), p.getLongitude())
+                    ))
+                    .orElse(null);
+        }
 
         //4. 상태 세팅
         for (PlaceMapResponse place : places) {
@@ -71,12 +76,18 @@ public class PlaceMapService {
             //가장 최근에 방문한 시간을 방명록 내용 생성 시간으로 세팅
             place.setLastVistedAt(content.createdAt());
 
-            if (nearest != null &&
-            place.getPlaceId().equals(nearest.getPlaceId())) {
-                place.setMyStatus(MyContentStatus.RECENT);
-                place.setMyContent(content.content());
-            } else {
+            if (ui == ShowUiType.LIST) {
                 place.setMyStatus(MyContentStatus.VISITED);
+                place.setMyContent(content.content());
+            } else if (ui == ShowUiType.MAP) {
+                if (nearest != null &&
+                        place.getPlaceId().equals(nearest.getPlaceId())) {
+
+                    place.setMyStatus(MyContentStatus.RECENT);
+                    place.setMyContent(content.content());
+                } else {
+                    place.setMyStatus(MyContentStatus.VISITED);
+                }
             }
         }
 

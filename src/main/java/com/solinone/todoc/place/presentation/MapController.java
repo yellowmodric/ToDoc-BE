@@ -5,6 +5,7 @@ import com.solinone.todoc.global.security.CustomUserDetails;
 import com.solinone.todoc.place.application.PlaceMapService;
 import com.solinone.todoc.place.application.PlaceService;
 import com.solinone.todoc.place.dto.response.PlaceMapResponse;
+import com.solinone.todoc.place.dto.response.ShowUiType;
 import com.solinone.todoc.place.exception.map.InvalidLocationException;
 import com.solinone.todoc.place.exception.map.InvalidRadiusException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,8 @@ public class MapController {
             @AuthenticationPrincipal CustomUserDetails user,
             @RequestParam double lat,
             @RequestParam double lng,
-            @RequestParam(defaultValue = "100") int radius
+            @RequestParam(defaultValue = "100") int radius,
+            @RequestParam ShowUiType ui
     ) {
         //1. 좌표 범위 검증
         if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
@@ -51,7 +53,7 @@ public class MapController {
         Long userId = (user != null) ? user.getUserId() : null;
 
         return ApiResponse.success(
-                placeMapService.getNearbyPlaces(userId, lat, lng, radius)
+                placeMapService.getNearbyPlaces(userId, lat, lng, radius, ui)
         );
     }
 }
