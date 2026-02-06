@@ -37,4 +37,14 @@ public class Content extends BaseEntity {
 
     @Column(nullable = false)
     private String themeUrl;
+
+    public static Content create(Board board, User user, Font font, String content, String themeUrl) {
+        Content newContent = new Content();
+        newContent.board = board;
+        newContent.user = user;
+        newContent.font = font;
+        newContent.content = content;
+        newContent.themeUrl = themeUrl;
+        return newContent;
+    }
 }

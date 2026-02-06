@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface ContentRepository extends JpaRepository<Content, Long> {
 
+    int countByBoardBoardId(Long boardId);
     @Query("""
     select new com.solinone.todoc.content.dto.response.MyLatestContentResponse(
         c.contentId,
@@ -54,4 +55,5 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     );
 
     Long user(User user);
+    List<Content> findAllByBoardBoardId(Long boardId);
 }
