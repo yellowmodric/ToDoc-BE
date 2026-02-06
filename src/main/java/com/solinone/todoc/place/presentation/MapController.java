@@ -1,6 +1,7 @@
 package com.solinone.todoc.place.presentation;
 
 import com.solinone.todoc.global.response.ApiResponse;
+import com.solinone.todoc.global.security.CustomUserDetails;
 import com.solinone.todoc.place.application.PlaceMapService;
 import com.solinone.todoc.place.application.PlaceService;
 import com.solinone.todoc.place.dto.response.PlaceMapResponse;
@@ -9,6 +10,7 @@ import com.solinone.todoc.place.exception.map.InvalidRadiusException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,7 @@ public class MapController {
     @GetMapping("/places")
     @Operation(summary = "주변 가게 조회")
     public ApiResponse<List<PlaceMapResponse>> getNearbyPlaces(
+            @AuthenticationPrincipal CustomUserDetails user,
             @RequestParam double lat,
             @RequestParam double lng,
             @RequestParam(defaultValue = "100") int radius
@@ -45,8 +48,10 @@ public class MapController {
             throw new InvalidRadiusException();
         }
 
+        Long userId = (user != null) ? user.getUserId() : null;
+
         return ApiResponse.success(
-                placeMapService.getNearbyPlaces(lat, lng, radius)
+                placeMapService.getNearbyPlaces(userId, lat, lng, radius)
         );
     }
 }
