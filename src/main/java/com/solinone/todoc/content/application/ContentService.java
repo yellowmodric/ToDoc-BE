@@ -11,6 +11,7 @@ import com.solinone.todoc.content.infrastructure.ContentRepository;
 import com.solinone.todoc.font.domain.Font;
 import com.solinone.todoc.font.exception.FontNotFoundException;
 import com.solinone.todoc.font.infrastructure.FontRepository;
+import com.solinone.todoc.infrastructure.sse.SseEmitterService;
 import com.solinone.todoc.place.domain.Place;
 import com.solinone.todoc.place.exception.PlaceNotFoundException;
 import com.solinone.todoc.place.infrastructure.PlaceRepository;
@@ -31,6 +32,7 @@ public class ContentService {
     private final UserRepository userRepository;
     private final ContentRepository contentRepository;
     private final PlaceRepository placeRepository;
+    private final SseEmitterService sseEmitterService;
 
     @Transactional
     public ContentCreateResponse createContent(Long placeId, ContentCreateRequest request, Long userId) {
@@ -41,7 +43,7 @@ public class ContentService {
             throw new ContentAccessDeniedException();
         }
 
-        Board board = boardRepository.findByPlaceId(placeId)
+        Board board = boardRepository.findByPlacePlaceId(placeId)
                 .orElseThrow(BoardNotFoundException::new);
 
         Font font = fontRepository.findById(request.getFontId())
@@ -56,8 +58,10 @@ public class ContentService {
                 request.getPostColor(), request.getFontColor());
         Content savedContent = contentRepository.save(content);
 
-        int orderNumber = contentRepository.countByBoardId(board.getBoardId());
+        int orderNumber = contentRepository.countByBoardBoardId(board.getBoardId());
         String placeName = place.getPlaceName();
+
+        sseEmitterService.sendNewContent(placeId, savedContent);
 
         log.info("방명록 작성 완료 - contentId: {}, placedId: {}, orderNumber: {}, placeName: {}",
                 savedContent.getContentId(), placeId, orderNumber, placeName);

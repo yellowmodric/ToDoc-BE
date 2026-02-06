@@ -5,6 +5,7 @@ import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
 import com.solinone.todoc.global.response.ApiResponse;
 import com.solinone.todoc.global.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class ContentController {
     private final ContentService contentService;
 
     @PostMapping("/{placeId}/contents")
+    @Operation(summary = "방명록 작성")
     public ApiResponse<ContentCreateResponse> createContent(
             @PathVariable("placeId") Long placeId,
             @Valid @RequestBody ContentCreateRequest request,
