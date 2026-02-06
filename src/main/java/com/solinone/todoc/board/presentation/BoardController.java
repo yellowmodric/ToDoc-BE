@@ -8,6 +8,7 @@ import com.solinone.todoc.board.dto.response.ThemeResponse;
 import com.solinone.todoc.global.response.ApiResponse;
 import com.solinone.todoc.global.response.MessageResponse;
 import com.solinone.todoc.global.security.CustomUserDetails;
+import com.solinone.todoc.infrastructure.sse.SseEmitterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class BoardController {
 
     private final ThemeService themeService;
     private final BoardService boardService;
+    private final SseEmitterService sseEmitterService;
 
     @GetMapping("/themes")
     @PreAuthorize("hasRole('PROVIDER')")
@@ -50,5 +53,11 @@ public class BoardController {
     public ApiResponse<ProviderHomeResponse> getProviderHome(@AuthenticationPrincipal CustomUserDetails userDetails) {
         ProviderHomeResponse response = boardService.getProviderHome(userDetails.getUserId());
         return ApiResponse.success(response);
+    }
+
+    @GetMapping(value = "/boards/{placeId}/stream", produces = "text/event-stream")
+    @Operation(summary = "방명록 판 조회시 sse연결")
+    public SseEmitter streamContent(@PathVariable("placeId") Long placeId) {
+        return sseEmitterService.createEmitter(placeId);
     }
 }

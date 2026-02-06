@@ -72,6 +72,7 @@ public class BoardService {
                 savedBoard.getBoardId(), request.getPlaceId(), userId, qrUrl);
     }
 
+    @Transactional(readOnly = true)
     public ProviderHomeResponse getProviderHome(Long userId) {
         List<Place> places = placeRepository.findByUserUserId(userId);
 
