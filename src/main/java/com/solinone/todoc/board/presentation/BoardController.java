@@ -3,6 +3,7 @@ package com.solinone.todoc.board.presentation;
 import com.solinone.todoc.board.application.BoardService;
 import com.solinone.todoc.board.application.ThemeService;
 import com.solinone.todoc.board.dto.request.BoardCreateRequest;
+import com.solinone.todoc.board.dto.response.ProviderHomeResponse;
 import com.solinone.todoc.board.dto.response.ThemeResponse;
 import com.solinone.todoc.global.response.ApiResponse;
 import com.solinone.todoc.global.response.MessageResponse;
@@ -41,5 +42,13 @@ public class BoardController {
                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
         boardService.createBoard(request,userDetails.getUserId());
         return ApiResponse.success(new MessageResponse("방명록 판이 생성되었습니다."));
+    }
+
+    @GetMapping("/provider/home")
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "사장님 홈 - 가게 목록 + 첫번째 가게 상세")
+    public ApiResponse<ProviderHomeResponse> getProviderHome(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        ProviderHomeResponse response = boardService.getProviderHome(userDetails.getUserId());
+        return ApiResponse.success(response);
     }
 }

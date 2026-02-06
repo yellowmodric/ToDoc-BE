@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ContentRepository extends JpaRepository<Content, Long> {
 
-    @Query("SELECT COUNT(c) FROM Content c WHERE c.board.boardId = :boardId")
-    int countByBoardId(@Param("boardId") Long boardId);
+    int countByBoardBoardId(Long boardId);
 
+    List<Content> findAllByBoardBoardId(Long boardId);
 }

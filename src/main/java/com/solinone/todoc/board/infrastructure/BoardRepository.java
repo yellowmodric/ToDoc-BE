@@ -9,9 +9,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 특정 장소에 이미 방명록 판이 존재하는지 확인
-    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Board b WHERE b.place.placeId = :placeId")
-    boolean existsByPlaceId(@Param("placeId") Long placeId);
+    boolean existsByPlacePlaceId(@Param("placeId") Long placeId);
 
-    @Query("SELECT b FROM Board b WHERE b.place.placeId = :placeId")
-    Optional<Board> findByPlaceId(Long placeId);
+    Optional<Board> findByPlacePlaceId(Long placeId);
 }

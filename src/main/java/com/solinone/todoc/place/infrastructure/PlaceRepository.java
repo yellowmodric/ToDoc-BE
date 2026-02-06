@@ -8,4 +8,5 @@ import java.util.List;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
     boolean existsByBusinessNumberAndAddress(String businessNumber, String address);
     List<Place> findByUser_UserIdOrderByCreatedAtDesc(Long userId);
+    List<Place> findByUserUserId(Long userId);
 }
