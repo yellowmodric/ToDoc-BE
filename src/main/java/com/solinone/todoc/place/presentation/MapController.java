@@ -1,18 +1,19 @@
 package com.solinone.todoc.place.presentation;
 
+import com.solinone.todoc.content.dto.response.LatestContentResponse;
 import com.solinone.todoc.global.response.ApiResponse;
+import com.solinone.todoc.global.security.CustomUserDetails;
 import com.solinone.todoc.place.application.PlaceMapService;
 import com.solinone.todoc.place.application.PlaceService;
 import com.solinone.todoc.place.dto.response.PlaceMapResponse;
+import com.solinone.todoc.place.dto.response.ShowUiType;
 import com.solinone.todoc.place.exception.map.InvalidLocationException;
 import com.solinone.todoc.place.exception.map.InvalidRadiusException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,9 +27,11 @@ public class MapController {
     @GetMapping("/places")
     @Operation(summary = "주변 가게 조회")
     public ApiResponse<List<PlaceMapResponse>> getNearbyPlaces(
+            @AuthenticationPrincipal CustomUserDetails user,
             @RequestParam double lat,
             @RequestParam double lng,
-            @RequestParam(defaultValue = "100") int radius
+            @RequestParam(defaultValue = "1000") int radius,
+            @RequestParam ShowUiType ui
     ) {
         //1. 좌표 범위 검증
         if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
@@ -45,8 +48,20 @@ public class MapController {
             throw new InvalidRadiusException();
         }
 
+        Long userId = (user != null) ? user.getUserId() : null;
+
         return ApiResponse.success(
-                placeMapService.getNearbyPlaces(lat, lng, radius)
+                placeMapService.getNearbyPlaces(userId, lat, lng, radius, ui)
+        );
+    }
+
+    @GetMapping("/places/{placeId}/contents/latest")
+    @Operation(summary = "매장 상세에서 최신 방명록 조회")
+    public ApiResponse<List<LatestContentResponse>> getLatestContents(
+            @PathVariable Long placeId
+    ) {
+        return ApiResponse.success(
+                placeMapService.getLatestContent(placeId)
         );
     }
 }

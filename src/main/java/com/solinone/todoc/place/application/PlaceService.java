@@ -1,5 +1,7 @@
 package com.solinone.todoc.place.application;
 
+import com.solinone.todoc.content.dto.response.LatestContentResponse;
+import com.solinone.todoc.content.infrastructure.ContentRepository;
 import com.solinone.todoc.place.domain.Place;
 import com.solinone.todoc.place.dto.request.PlaceCreateRequest;
 import com.solinone.todoc.place.dto.response.PlaceResponse;
@@ -21,6 +23,7 @@ public class PlaceService {
 
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
+    private final ContentRepository contentRepository;
 
 
     public void createPlaceOnSignup(User owner, PlaceCreateRequest request) {
