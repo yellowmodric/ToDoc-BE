@@ -1,6 +1,8 @@
 package com.solinone.todoc.place.presentation;
 
+import com.solinone.todoc.content.application.MyContentService;
 import com.solinone.todoc.content.dto.response.LatestContentResponse;
+import com.solinone.todoc.content.dto.response.MyContentResponse;
 import com.solinone.todoc.global.response.ApiResponse;
 import com.solinone.todoc.global.security.CustomUserDetails;
 import com.solinone.todoc.place.application.PlaceMapService;
@@ -12,19 +14,21 @@ import com.solinone.todoc.place.exception.map.InvalidRadiusException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/map")
+@RequestMapping("/api/map/places")
 @RequiredArgsConstructor
 @Tag(name = "지도", description = "지도 관련 API")
 public class MapController {
     private final PlaceMapService placeMapService;
+    private final MyContentService myContentService;
 
-    @GetMapping("/places")
+    @GetMapping
     @Operation(summary = "주변 가게 조회")
     public ApiResponse<List<PlaceMapResponse>> getNearbyPlaces(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -55,13 +59,25 @@ public class MapController {
         );
     }
 
-    @GetMapping("/places/{placeId}/contents/latest")
+    @GetMapping("/{placeId}/contents/latest")
     @Operation(summary = "매장 상세에서 최신 방명록 조회")
     public ApiResponse<List<LatestContentResponse>> getLatestContents(
             @PathVariable Long placeId
     ) {
         return ApiResponse.success(
                 placeMapService.getLatestContent(placeId)
+        );
+    }
+
+    @GetMapping("/{placeId}/contents/me")
+    @PreAuthorize("hasRole('VISITOR')")
+    @Operation(summary = "매장 상세에서 내 방명록 조회")
+    public ApiResponse<List<MyContentResponse>> getMyContents(
+            @PathVariable Long placeId,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        return ApiResponse.success(
+                myContentService.getMyContents(placeId, user.getUserId())
         );
     }
 }
