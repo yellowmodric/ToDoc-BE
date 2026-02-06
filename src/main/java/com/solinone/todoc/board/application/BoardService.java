@@ -54,7 +54,7 @@ public class BoardService {
         byte[] qrImageBytes = QrCodeGenerator.generateQrCode(qrTargetUrl, 300, 300);
         String qrUrl = s3Uploader.uploadQrImage(request.getPlaceId(), qrImageBytes);
 
-        Board board = Board.create(place, theme, request.getBoardColor(), qrUrl);
+        Board board = Board.create(place, theme, qrUrl);
         Board savedBoard = boardRepository.save(board);
 
         log.info("방명록 판 생성 완료 - boardId: {}, placeId: {}, userId: {}, qrUrl: {}",
