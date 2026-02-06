@@ -36,8 +36,5 @@ public class Content extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private String postColor;
-
-    @Column(nullable = false)
-    private String fontColor;
+    private String themeUrl;
 }
