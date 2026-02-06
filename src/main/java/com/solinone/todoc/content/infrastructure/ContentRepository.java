@@ -33,4 +33,18 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
             @Param("userId") Long userId,
             @Param("placeIds") List<Long> placeIds
     );
+
+    @Query(value = """
+    select c.*
+    from contents c
+    join boards b on c.board_id = b.board_id
+    where b.place_id = :placeId
+        and c.created_at >= CURRENT_DATE 
+    order by RANDOM()
+    limit 2
+    """, nativeQuery = true)
+    List<Content> findTodayRandomContents(
+            @Param("placeId") Long placeId
+    );
+
 }
