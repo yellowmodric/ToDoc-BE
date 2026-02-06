@@ -1,5 +1,6 @@
 package com.solinone.todoc.place.application;
 
+import com.solinone.todoc.content.dto.response.LatestContentResponse;
 import com.solinone.todoc.content.dto.response.MyLatestContentResponse;
 import com.solinone.todoc.content.infrastructure.ContentRepository;
 import com.solinone.todoc.place.dto.response.MyContentStatus;
@@ -9,6 +10,7 @@ import com.solinone.todoc.place.infrastructure.PlaceRepository;
 import com.solinone.todoc.place.util.DistanceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -92,5 +94,13 @@ public class PlaceMapService {
         }
 
         return places;
+    }
+
+    @Transactional(readOnly = true)
+    public List<LatestContentResponse> getLatestContent(Long placeId) {
+        return contentRepository.findTodayRandomContents(placeId)
+                .stream()
+                .map(LatestContentResponse::from)
+                .toList();
     }
 }
