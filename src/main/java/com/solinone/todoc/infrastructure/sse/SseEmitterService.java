@@ -34,7 +34,8 @@ public class SseEmitterService {
         emitter.onTimeout(() -> removeEmitter(placeId, emitter));
         emitter.onError(e -> removeEmitter(placeId, emitter));
 
-        log.info("SSE 연결 생성 - placeId: {}, 현재 연결 수: {}", placeId, emitters.get(placeId).size());
+        List<SseEmitter> placeEmitters = emitters.get(placeId);
+        log.info("SSE 연결 생성 - placeId: {}, 현재 연결 수: {}", placeId, placeEmitters != null ? placeEmitters.size() : 0);
 
         //연결 직후 더미 이벤트 전송 (연결 확인용)
         try {
@@ -82,7 +83,7 @@ public class SseEmitterService {
                         .data(data));
                 successCount++;
             } catch (IOException e) {
-                log.error("SSE 전송 실패 - placeId: {}, contnetId: {}", placeId, content.getContentId(), e);
+                log.error("SSE 전송 실패 - placeId: {}, contentId: {}", placeId, content.getContentId(), e);
                 removeEmitter(placeId, emitter);
                 failCount++;
             }

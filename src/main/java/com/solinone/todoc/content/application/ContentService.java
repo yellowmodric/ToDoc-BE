@@ -22,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -39,7 +41,8 @@ public class ContentService {
 
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(PlaceNotFoundException::new);
-        if (place.getUser().getUserId() == userId) {
+
+        if (Objects.equals(place.getUser().getUserId(), userId)) {
             throw new ContentAccessDeniedException();
         }
 

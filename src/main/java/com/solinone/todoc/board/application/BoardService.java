@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,6 +77,10 @@ public class BoardService {
     public ProviderHomeResponse getProviderHome(Long userId) {
         List<Place> places = placeRepository.findByUserUserId(userId);
 
+        if (places.isEmpty()) {
+            log.info(" 사장님 홈 조회완료 - userId: {}, 가게 수: 0 ", userId);
+            return ProviderHomeResponse.of(Collections.emptyList());
+        }
         List<PlaceWithBoardResponse> responses = new ArrayList<>();
 
         //첫번째 가게 정보 포함
