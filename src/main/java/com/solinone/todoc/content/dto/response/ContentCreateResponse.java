@@ -15,10 +15,9 @@ public class ContentCreateResponse {
     private String placeName;
     private Integer orderNumber;
     private String content;
+    private Long fontId;
     private String fontName;
-    private String themeName;
-    private String postColor;
-    private String fontColor;
+    private String themeUrl;
 
     @JsonFormat(pattern = "yy.MM.dd HH:mm")
     private LocalDateTime createdAt;
@@ -28,10 +27,9 @@ public class ContentCreateResponse {
                 .contentId(content.getContentId())
                 .orderNumber(orderNumber)
                 .content(content.getContent())
+                .fontId(content.getFont().getFontId())
                 .fontName(content.getFont().getFontName())
-                .themeName(content.getBoard().getTheme().getThemeName())
-                .postColor(content.getPostColor())
-                .fontColor(content.getFontColor())
+                .themeUrl(content.getThemeUrl())
                 .createdAt(content.getCreatedAt())
                 .placeName(placeName)
                 .build();

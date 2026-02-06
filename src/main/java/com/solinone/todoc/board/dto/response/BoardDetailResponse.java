@@ -11,16 +11,14 @@ import java.util.List;
 public class BoardDetailResponse {
 
     private Long boardId;
-    private String themeName;
-    private String boardColor;
+    private Long themeId;
     private String qrUrl;
     private List<ContentResponse> contents;
 
     public static BoardDetailResponse of(Board board, List<ContentResponse> contents) {
         return BoardDetailResponse.builder()
                 .boardId(board.getBoardId())
-                .themeName(board.getTheme().getThemeName())
-                .boardColor(board.getBoardColor())
+                .themeId(board.getTheme().getThemeId())
                 .qrUrl(board.getQrUrl())
                 .contents(contents)
                 .build();

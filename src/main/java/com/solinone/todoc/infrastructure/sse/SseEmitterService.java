@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,14 +59,16 @@ public class SseEmitterService {
             return;
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd HH:mm");
+
         //전송 데이터 구성
         Map<String, Object> data = Map.of(
                 "contentId", content.getContentId(),
                 "content", content.getContent(),
-                "postColor", content.getPostColor(),
-                "fontColor", content.getFontColor(),
-                "fontName", content.getFont().getFontName(),
-                "createdAt", content.getCreatedAt().toString()
+                "contentLength", content.getContent().length(),
+                "fontId", content.getFont().getFontId(),
+                "themeUrl", content.getThemeUrl(),
+                "createdAt", content.getCreatedAt().format(formatter)
         );
 
         //연결된 모든 클라이언트 전송

@@ -13,9 +13,9 @@ public class ContentResponse {
 
     private Long contentId;
     private String content;
-    private String postColor;
-    private String fontColor;
-    private String fontName;
+    private Integer contentLength;
+    private Long fontId;
+    private String themeUrl;
     @JsonFormat(pattern = "yy.MM.dd HH:mm")
     private LocalDateTime createdAt;
 
@@ -23,9 +23,9 @@ public class ContentResponse {
         return ContentResponse.builder()
                 .contentId(content.getContentId())
                 .content(content.getContent())
-                .postColor(content.getPostColor())
-                .fontColor(content.getFontColor())
-                .fontName(content.getFont().getFontName())
+                .contentLength(content.getContent().length())
+                .fontId(content.getFont().getFontId())
+                .themeUrl(content.getThemeUrl())
                 .createdAt(content.getCreatedAt())
                 .build();
     }

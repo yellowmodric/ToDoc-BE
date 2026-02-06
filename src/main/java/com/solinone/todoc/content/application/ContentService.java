@@ -54,8 +54,7 @@ public class ContentService {
             user = userRepository.findById(userId).orElse(null);
         }
 
-        Content content = Content.create(board, user, font, request.getContent(),
-                request.getPostColor(), request.getFontColor());
+        Content content = Content.create(board, user, font, request.getContent(), request.getThemeUrl());
         Content savedContent = contentRepository.save(content);
 
         int orderNumber = contentRepository.countByBoardBoardId(board.getBoardId());
