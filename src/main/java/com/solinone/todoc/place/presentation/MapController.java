@@ -30,7 +30,7 @@ public class MapController {
             @AuthenticationPrincipal CustomUserDetails user,
             @RequestParam double lat,
             @RequestParam double lng,
-            @RequestParam(defaultValue = "100") int radius,
+            @RequestParam(defaultValue = "1000") int radius,
             @RequestParam ShowUiType ui
     ) {
         //1. 좌표 범위 검증
