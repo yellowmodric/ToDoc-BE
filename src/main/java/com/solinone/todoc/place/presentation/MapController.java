@@ -60,7 +60,7 @@ public class MapController {
     }
 
     @GetMapping("/{placeId}/contents/latest")
-    @Operation(summary = "매장 상세에서 최신 방명록 조회")
+    @Operation(summary = "매장 상세에서 랜덤 방명록 조회")
     public ApiResponse<List<LatestContentResponse>> getLatestContents(
             @PathVariable Long placeId
     ) {
