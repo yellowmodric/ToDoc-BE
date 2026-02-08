@@ -17,24 +17,27 @@ public class PlaceMapResponse {
     private double latitude;
     private double longitude;
     private long contentCount;
+    private String address;
 
     //방명록 정보
     private MyContentStatus myStatus;
     private String myContent;
-    private LocalDateTime lastVistedAt;
+    private LocalDateTime lastVisitedAt;
 
     public PlaceMapResponse(
             Long placeId,
             String placeName,
             double latitude,
             double longitude,
-            long contentCount
+            long contentCount,
+            String address
     ) {
         this.placeId = placeId;
         this.placeName = placeName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.contentCount = contentCount;
+        this.address = address;
     }
 
     public static PlaceMapResponse from(PlaceMapProjection place) {
@@ -43,7 +46,8 @@ public class PlaceMapResponse {
                 place.getPlaceName(),
                 place.getLatitude(),
                 place.getLongitude(),
-                place.getContentCount()
+                place.getContentCount(),
+                place.getAddress()
         );
     }
 }

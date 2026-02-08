@@ -18,6 +18,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
         p.latitude   as latitude,
         p.longitude  as longitude,
         count(c.content_id) as contentCount,
+        p.address as address,
         (6371000 * acos(
             least(1.0, greatest(-1.0,
                 cos(radians(:lat)) * cos(radians(p.latitude))
