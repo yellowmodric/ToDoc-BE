@@ -22,7 +22,7 @@ public class PlaceMapResponse {
     //방명록 정보
     private MyContentStatus myStatus;
     private String myContent;
-    private LocalDateTime lastVisitedAt;
+    private LocalDateTime lastVistedAt;
 
     public PlaceMapResponse(
             Long placeId,
