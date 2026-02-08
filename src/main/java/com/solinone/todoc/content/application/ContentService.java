@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -74,16 +75,26 @@ public class ContentService {
     }
 
     @Transactional
-    public void deleteContent(Long contentId, Long userId) {
-        Content content = contentRepository.findById(contentId)
-                .orElseThrow(ContentNotFoundException::new);
+    public void deleteContents(List<Long> contentIds, Long userId) {
 
-        Long placeOwnerId = content.getBoard().getPlace().getUser().getUserId();
-
-        if (!Objects.equals(placeOwnerId, userId)) {
-            throw new ContentDeleteDeniedException();
+        if (contentIds.isEmpty()) {
+            throw new ContentNotFoundException();
         }
-        contentRepository.deleteById(contentId);
-        log.info("방명록 삭제 완료 - contentId: {}, userId: {} ",  contentId, userId);
+
+        List<Content> contents = contentRepository.findAllById(contentIds);
+
+        if (contents.size() != contentIds.size()) {
+            throw new ContentNotFoundException();
+        }
+
+        for (Content content : contents) {
+            Long placeOwnerId = content.getBoard().getPlace().getUser().getUserId();
+
+            if (!Objects.equals(placeOwnerId, userId)) {
+                throw new ContentDeleteDeniedException();
+            }
+        }
+        contentRepository.deleteAll(contents);
+        log.info("방명록 일괄 삭제 완료 - userId: {}, 삭제 개수: {}", userId, contents.size());
     }
 }

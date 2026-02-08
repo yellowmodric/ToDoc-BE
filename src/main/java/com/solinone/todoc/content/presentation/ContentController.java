@@ -2,6 +2,7 @@ package com.solinone.todoc.content.presentation;
 
 import com.solinone.todoc.content.application.ContentService;
 import com.solinone.todoc.content.dto.request.ContentCreateRequest;
+import com.solinone.todoc.content.dto.request.ContentDeleteRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
 import com.solinone.todoc.global.response.ApiResponse;
 import com.solinone.todoc.global.response.MessageResponse;
@@ -35,12 +36,12 @@ public class ContentController {
         return ApiResponse.success(response);
     }
 
-    @DeleteMapping("/contents/{contentId}")
+    @DeleteMapping("/contents")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "가게 사장님 방명록 삭제")
-    public ApiResponse<MessageResponse> deleteContent(@PathVariable("contentId") Long contentId,
-                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
-        contentService.deleteContent(contentId, userDetails.getUserId());
+    public ApiResponse<MessageResponse> deleteContents(@RequestBody ContentDeleteRequest request,
+                                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        contentService.deleteContents(request.getContentIds(), userDetails.getUserId());
 
         return ApiResponse.success(new MessageResponse("방명록 삭제 완료"));
     }
