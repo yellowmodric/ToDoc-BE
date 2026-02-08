@@ -6,4 +6,5 @@ public interface PlaceMapProjection {
     Double getLatitude();
     Double getLongitude();
     Long getContentCount();
+    String getAddress();
 }
