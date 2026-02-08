@@ -4,23 +4,25 @@ import com.solinone.todoc.content.application.ContentService;
 import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
 import com.solinone.todoc.global.response.ApiResponse;
+import com.solinone.todoc.global.response.MessageResponse;
 import com.solinone.todoc.global.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/boards")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Tag(name = "방명록 작성", description = "방명록 작성 API")
 public class ContentController {
 
     private final ContentService contentService;
 
-    @PostMapping("/{placeId}/contents")
+    @PostMapping("/boards/{placeId}/contents")
     @Operation(summary = "방명록 작성")
     public ApiResponse<ContentCreateResponse> createContent(
             @PathVariable("placeId") Long placeId,
@@ -31,5 +33,15 @@ public class ContentController {
         ContentCreateResponse response = contentService.createContent(placeId, request, userId);
 
         return ApiResponse.success(response);
+    }
+
+    @DeleteMapping("/contents/{contentId}")
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "가게 사장님 방명록 삭제")
+    public ApiResponse<MessageResponse> deleteContent(@PathVariable("contentId") Long contentId,
+                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
+        contentService.deleteContent(contentId, userDetails.getUserId());
+
+        return ApiResponse.success(new MessageResponse("방명록 삭제 완료"));
     }
 }

@@ -8,6 +8,7 @@ import com.solinone.todoc.board.dto.response.ContentResponse;
 import com.solinone.todoc.board.dto.response.PlaceWithBoardResponse;
 import com.solinone.todoc.board.dto.response.ProviderHomeResponse;
 import com.solinone.todoc.board.exception.BoardAlreadyExistException;
+import com.solinone.todoc.board.exception.BoardNotFoundException;
 import com.solinone.todoc.board.exception.ThemeNotFoundException;
 import com.solinone.todoc.board.infrastructure.BoardRepository;
 import com.solinone.todoc.board.infrastructure.ThemeRepository;
@@ -112,8 +113,9 @@ public class BoardService {
     }
 
     public BoardDetailResponse getBoardByPlaceId(Long placeId) {
+
         Board board = boardRepository.findByPlacePlaceId(placeId)
-                .orElseThrow(PlaceNotFoundException::new);
+                .orElseThrow(BoardNotFoundException::new);
 
         List<Content> contents = contentRepository.findAllByBoardBoardId(board.getBoardId());
 

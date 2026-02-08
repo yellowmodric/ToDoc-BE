@@ -7,6 +7,8 @@ import com.solinone.todoc.content.domain.Content;
 import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
 import com.solinone.todoc.content.exception.ContentAccessDeniedException;
+import com.solinone.todoc.content.exception.ContentDeleteDeniedException;
+import com.solinone.todoc.content.exception.ContentNotFoundException;
 import com.solinone.todoc.content.infrastructure.ContentRepository;
 import com.solinone.todoc.font.domain.Font;
 import com.solinone.todoc.font.exception.FontNotFoundException;
@@ -69,5 +71,19 @@ public class ContentService {
                 savedContent.getContentId(), placeId, orderNumber, placeName);
 
         return ContentCreateResponse.from(savedContent, orderNumber, placeName);
+    }
+
+    @Transactional
+    public void deleteContent(Long contentId, Long userId) {
+        Content content = contentRepository.findById(contentId)
+                .orElseThrow(ContentNotFoundException::new);
+
+        Long placeOwnerId = content.getBoard().getPlace().getUser().getUserId();
+
+        if (!Objects.equals(placeOwnerId, userId)) {
+            throw new ContentDeleteDeniedException();
+        }
+        contentRepository.deleteById(contentId);
+        log.info("방명록 삭제 완료 - contentId: {}, userId: {} ",  contentId, userId);
     }
 }
