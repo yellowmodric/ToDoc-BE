@@ -48,5 +48,5 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             @Param("radius") int radius
     );
 
-    List<Place> findByUserUserId(Long userId);
+    List<Place> findAllByUserUserId(Long userId);
 }

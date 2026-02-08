@@ -7,6 +7,8 @@ import com.solinone.todoc.content.domain.Content;
 import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
 import com.solinone.todoc.content.exception.ContentAccessDeniedException;
+import com.solinone.todoc.content.exception.ContentDeleteDeniedException;
+import com.solinone.todoc.content.exception.ContentNotFoundException;
 import com.solinone.todoc.content.infrastructure.ContentRepository;
 import com.solinone.todoc.font.domain.Font;
 import com.solinone.todoc.font.exception.FontNotFoundException;
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -69,5 +72,29 @@ public class ContentService {
                 savedContent.getContentId(), placeId, orderNumber, placeName);
 
         return ContentCreateResponse.from(savedContent, orderNumber, placeName);
+    }
+
+    @Transactional
+    public void deleteContents(List<Long> contentIds, Long userId) {
+
+        if (contentIds == null || contentIds.isEmpty()) {
+            throw new ContentNotFoundException();
+        }
+
+        List<Content> contents = contentRepository.findAllById(contentIds);
+
+        if (contents.size() != contentIds.size()) {
+            throw new ContentNotFoundException();
+        }
+
+        for (Content content : contents) {
+            Long placeOwnerId = content.getBoard().getPlace().getUser().getUserId();
+
+            if (!Objects.equals(placeOwnerId, userId)) {
+                throw new ContentDeleteDeniedException();
+            }
+        }
+        contentRepository.deleteAll(contents);
+        log.info("방명록 일괄 삭제 완료 - userId: {}, 삭제 개수: {}", userId, contents.size());
     }
 }
