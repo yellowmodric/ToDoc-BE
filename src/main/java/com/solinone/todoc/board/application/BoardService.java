@@ -27,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +50,7 @@ public class BoardService {
         Place place = placeRepository.findById(request.getPlaceId())
                 .orElseThrow(PlaceNotFoundException::new);
 
-        if (!place.getUser().getUserId().equals(userId)) {
+        if (!Objects.equals(place.getUser().getUserId(), userId)) {
             throw new PlaceUserMismatchException();
         }
 
@@ -78,7 +75,7 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public ProviderHomeResponse getProviderHome(Long userId) {
-        List<Place> places = placeRepository.findByUserUserId(userId);
+        List<Place> places = placeRepository.findAllByUserUserId(userId);
 
         if (places.isEmpty()) {
             log.info(" 사장님 홈 조회완료 - userId: {}, 가게 수: 0 ", userId);
@@ -125,5 +122,45 @@ public class BoardService {
 
         log.info("방명록 판 조회 완료 - placeId: {}, 방명록 개수: {} ",  placeId, contents.size());
         return BoardDetailResponse.of(board, contentResponses);
+    }
+
+    public ProviderHomeResponse getMyPlaceBoard(Long placeId, Long userId) {
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(PlaceNotFoundException::new);
+
+        if (!Objects.equals(place.getUser().getUserId(), userId)) {
+            throw new PlaceUserMismatchException();
+        }
+
+        List<Place> places = placeRepository.findAllByUserUserId(userId);
+
+        if (places.isEmpty()) {
+            return ProviderHomeResponse.of(Collections.emptyList());
+        }
+
+        List<PlaceWithBoardResponse> responses = new ArrayList<>();
+
+        for (Place p : places) {
+            Optional<Board> board = boardRepository.findByPlacePlaceId(p.getPlaceId());
+
+            //선택된 가게만 contents 포함
+            if (p.getPlaceId().equals(placeId) && board.isPresent()) {
+                List<Content> contents = contentRepository.findAllByBoardBoardId(board.get().getBoardId());
+                List<ContentResponse> contentResponses = contents.stream()
+                        .map(ContentResponse::from)
+                        .collect(Collectors.toList());
+
+                responses.add(PlaceWithBoardResponse.of(p, board.get(), contentResponses));
+            }
+            //나머지 가게는 기본 정보만
+            else if(board.isPresent()) {
+                responses.add(PlaceWithBoardResponse.of(p, board.get(), new ArrayList<>()));
+            } else {
+                responses.add(PlaceWithBoardResponse.ofWithoutBoard(p));
+            }
+        }
+
+        log.info("사장님 가게 상세 조회 - placeId: {}, userId: {}, 전체 가게 수: {}", placeId, userId, places.size());
+        return ProviderHomeResponse.of(responses);
     }
 }
