@@ -76,7 +76,7 @@ public class PlaceMapService {
             }
 
             //가장 최근에 방문한 시간을 방명록 내용 생성 시간으로 세팅
-            place.setLastVistedAt(content.createdAt());
+            place.setLastVisitedAt(content.createdAt());
 
             if (ui == ShowUiType.LIST) {
                 place.setMyStatus(MyContentStatus.VISITED);
@@ -97,8 +97,8 @@ public class PlaceMapService {
     }
 
     @Transactional(readOnly = true)
-    public List<LatestContentResponse> getLatestContent(Long placeId) {
-        return contentRepository.findTodayRandomContents(placeId)
+    public List<LatestContentResponse> getRandomContent(Long placeId) {
+        return contentRepository.findRandomContents(placeId)
                 .stream()
                 .map(LatestContentResponse::from)
                 .toList();
