@@ -59,13 +59,13 @@ public class MapController {
         );
     }
 
-    @GetMapping("/{placeId}/contents/latest")
+    @GetMapping("/{placeId}/contents/random")
     @Operation(summary = "매장 상세에서 랜덤 방명록 조회")
     public ApiResponse<List<LatestContentResponse>> getLatestContents(
             @PathVariable Long placeId
     ) {
         return ApiResponse.success(
-                placeMapService.getLatestContent(placeId)
+                placeMapService.getRandomContent(placeId)
         );
     }
 

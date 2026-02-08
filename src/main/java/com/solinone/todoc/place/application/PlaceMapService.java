@@ -97,7 +97,7 @@ public class PlaceMapService {
     }
 
     @Transactional(readOnly = true)
-    public List<LatestContentResponse> getLatestContent(Long placeId) {
+    public List<LatestContentResponse> getRandomContent(Long placeId) {
         return contentRepository.findRandomContents(placeId)
                 .stream()
                 .map(LatestContentResponse::from)

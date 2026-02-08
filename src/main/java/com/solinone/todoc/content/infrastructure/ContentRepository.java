@@ -40,6 +40,7 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     select c.*
     from contents c
     join boards b on c.board_id = b.board_id
+    where b.place_id = :placeId
     order by RANDOM()
     limit 2
     """, nativeQuery = true)
