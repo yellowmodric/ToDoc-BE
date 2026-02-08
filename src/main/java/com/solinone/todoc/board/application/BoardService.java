@@ -3,6 +3,7 @@ package com.solinone.todoc.board.application;
 import com.solinone.todoc.board.domain.Board;
 import com.solinone.todoc.board.domain.Theme;
 import com.solinone.todoc.board.dto.request.BoardCreateRequest;
+import com.solinone.todoc.board.dto.response.BoardDetailResponse;
 import com.solinone.todoc.board.dto.response.ContentResponse;
 import com.solinone.todoc.board.dto.response.PlaceWithBoardResponse;
 import com.solinone.todoc.board.dto.response.ProviderHomeResponse;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -107,5 +109,19 @@ public class BoardService {
         log.info("사장님 홈 조회 완료 - userId: {}, 가게 수: {}",  userId, places.size());
 
         return ProviderHomeResponse.of(responses);
+    }
+
+    public BoardDetailResponse getBoardByPlaceId(Long placeId) {
+        Board board = boardRepository.findByPlacePlaceId(placeId)
+                .orElseThrow(PlaceNotFoundException::new);
+
+        List<Content> contents = contentRepository.findAllByBoardBoardId(board.getBoardId());
+
+        List<ContentResponse> contentResponses = contents.stream()
+                .map(ContentResponse::from)
+                .collect(Collectors.toList());
+
+        log.info("방명록 판 조회 완료 - placeId: {}, 방명록 개수: {} ",  placeId, contents.size());
+        return BoardDetailResponse.of(board, contentResponses);
     }
 }

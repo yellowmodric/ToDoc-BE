@@ -3,6 +3,7 @@ package com.solinone.todoc.board.presentation;
 import com.solinone.todoc.board.application.BoardService;
 import com.solinone.todoc.board.application.ThemeService;
 import com.solinone.todoc.board.dto.request.BoardCreateRequest;
+import com.solinone.todoc.board.dto.response.BoardDetailResponse;
 import com.solinone.todoc.board.dto.response.ProviderHomeResponse;
 import com.solinone.todoc.board.dto.response.ThemeResponse;
 import com.solinone.todoc.global.response.ApiResponse;
@@ -59,5 +60,12 @@ public class BoardController {
     @Operation(summary = "방명록 판 조회시 sse연결")
     public SseEmitter streamContent(@PathVariable("placeId") Long placeId) {
         return sseEmitterService.createEmitter(placeId);
+    }
+
+    @GetMapping("/boards/{placeId}")
+    @Operation(summary = "QR스캔 후 사용자 접근 데이터")
+    public ApiResponse<BoardDetailResponse> getBoardByPlaceId(@PathVariable("placeId") Long placeId) {
+        BoardDetailResponse response = boardService.getBoardByPlaceId(placeId);
+        return ApiResponse.success(response);
     }
 }
