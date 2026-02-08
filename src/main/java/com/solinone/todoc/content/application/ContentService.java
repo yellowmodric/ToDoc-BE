@@ -77,7 +77,7 @@ public class ContentService {
     @Transactional
     public void deleteContents(List<Long> contentIds, Long userId) {
 
-        if (contentIds.isEmpty()) {
+        if (contentIds == null || contentIds.isEmpty()) {
             throw new ContentNotFoundException();
         }
 

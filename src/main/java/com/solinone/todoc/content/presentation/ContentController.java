@@ -39,7 +39,7 @@ public class ContentController {
     @DeleteMapping("/contents")
     @PreAuthorize("hasRole('PROVIDER')")
     @Operation(summary = "가게 사장님 방명록 삭제")
-    public ApiResponse<MessageResponse> deleteContents(@RequestBody ContentDeleteRequest request,
+    public ApiResponse<MessageResponse> deleteContents(@Valid @RequestBody ContentDeleteRequest request,
                                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
         contentService.deleteContents(request.getContentIds(), userDetails.getUserId());
 
