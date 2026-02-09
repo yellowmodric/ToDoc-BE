@@ -156,6 +156,8 @@ public class ContentService {
         Pageable pageable = PageRequest.of(0, size, Sort.by(direction, "contentId"));
         Page<Content> page = contentRepository.findAllByBoardBoardId(boardId, pageable);
 
+        long totalElements = contentRepository.countByBoardBoardId(boardId);
+
         List<ContentResponse> contentResponses = page.getContent().stream()
                 .map(ContentResponse::from)
                 .collect(Collectors.toList());
@@ -164,7 +166,7 @@ public class ContentService {
 
         log.info("방명록 첫 페이지 조회 - boardId: {}, size: {}, hasNext: {} ",  boardId, size, !page.isLast());
 
-        return CursorResponse.of(contentResponses, nextCursor, page.isLast());
+        return CursorResponse.of(contentResponses, nextCursor, page.isLast(), totalElements);
     }
 
     private PageResponse<ContentResponse> getContentsByPaging(Long boardId, Integer page, int size, Sort.Direction direction) {
@@ -184,8 +186,9 @@ public class ContentService {
     //모바일 커서 기반 조회
     private CursorResponse<ContentResponse> getContentsByCursor(
             Long boardId, Long cursor, int size, Sort.Direction direction) {
-        List<Content> contents;
+        long totalElements = contentRepository.countByBoardBoardId(boardId);
 
+        List<Content> contents;
         if (direction == Sort.Direction.DESC) {
             contents = contentRepository.findByBoardBoardIdAndContentIdLessThan(
                     boardId, cursor,
@@ -205,6 +208,6 @@ public class ContentService {
 
         log.info("방명록 커서 조회 - boardId: {}, cursor: {}, size: {}, hasNext: {}", boardId, cursor, size, !isLast);
 
-        return CursorResponse.of(contentResponses, nextCursor, isLast);
+        return CursorResponse.of(contentResponses, nextCursor, isLast, totalElements);
     }
 }
