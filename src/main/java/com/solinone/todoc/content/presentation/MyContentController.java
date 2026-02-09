@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/mypage/contents")
 @RequiredArgsConstructor
 @Tag(name = "마이페이지", description = "마이페이지 API")
-public class MyContentControlloer {
+public class MyContentController {
     private final MyContentService myContentService;
 
     @GetMapping
