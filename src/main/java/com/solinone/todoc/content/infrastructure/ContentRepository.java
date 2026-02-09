@@ -3,6 +3,8 @@ package com.solinone.todoc.content.infrastructure;
 import com.solinone.todoc.content.domain.Content;
 import com.solinone.todoc.content.dto.response.MyLatestContentResponse;
 import com.solinone.todoc.user.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -60,4 +62,11 @@ public interface ContentRepository extends JpaRepository<Content, Long> {
     @EntityGraph(attributePaths = {"font"})
     List<Content> findByUser_UserIdOrderByCreatedAtDesc(Long userId);
 
+    Page<Content> findAllByBoardBoardId(Long boardId, Pageable pageable);
+
+    //커서 기반 - 최신순
+    List<Content> findByBoardBoardIdAndContentIdLessThan(Long boardId, Long cursor, Pageable pageable);
+
+    //커서 기반 - 오래된 순
+    List<Content> findByBoardBoardIdAndContentIdGreaterThan(Long boardId, Long cursor, Pageable pageable);
 }
