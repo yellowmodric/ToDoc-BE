@@ -1,9 +1,14 @@
 package com.solinone.todoc.content.application;
 
+import com.solinone.todoc.content.domain.Content;
 import com.solinone.todoc.content.dto.response.MyContentResponse;
-import com.solinone.todoc.content.dto.response.MyPageContentResponse;
+import com.solinone.todoc.content.dto.response.mypage.MyPageContentResponse;
+import com.solinone.todoc.content.dto.response.mypage.MypageDetailResponse;
+import com.solinone.todoc.content.exception.ContentAccessDeniedException;
+import com.solinone.todoc.content.exception.ContentNotFoundException;
 import com.solinone.todoc.content.infrastructure.ContentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,5 +39,20 @@ public class MyContentService {
                 .stream()
                 .map(MyPageContentResponse::from)
                 .toList();
+    }
+
+    //마이페이지에서 내 방명록 상세 조회
+    @Transactional(readOnly = true)
+    public MypageDetailResponse getMyPageContentDetail(
+            Long userId, Long contentId
+    ) {
+        Content content = contentRepository.findById(contentId)
+                .orElseThrow(ContentNotFoundException::new);
+
+        if (!content.getUser().getUserId().equals(userId)) {
+            throw new ContentAccessDeniedException();
+        }
+
+        return MypageDetailResponse.from(content);
     }
 }
