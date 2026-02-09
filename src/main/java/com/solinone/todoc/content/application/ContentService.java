@@ -153,7 +153,7 @@ public class ContentService {
     }
 
     private CursorResponse<ContentResponse> getContentsFirstPage(Long boardId, int size, Sort.Direction direction) {
-        Pageable pageable = PageRequest.of(0, size, Sort.by(direction, "createdAt"));
+        Pageable pageable = PageRequest.of(0, size, Sort.by(direction, "contentId"));
         Page<Content> page = contentRepository.findAllByBoardBoardId(boardId, pageable);
 
         List<ContentResponse> contentResponses = page.getContent().stream()
@@ -189,10 +189,10 @@ public class ContentService {
         if (direction == Sort.Direction.DESC) {
             contents = contentRepository.findByBoardBoardIdAndContentIdLessThan(
                     boardId, cursor,
-                    PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "createdAt")));
+                    PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "contentId")));
         } else {
             contents = contentRepository.findByBoardBoardIdAndContentIdGreaterThan(
-                    boardId, cursor, PageRequest.of(0, size, Sort.by(Sort.Direction.ASC, "createdAt")));
+                    boardId, cursor, PageRequest.of(0, size, Sort.by(Sort.Direction.ASC, "contentId")));
         }
 
         List<ContentResponse> contentResponses = contents.stream()
