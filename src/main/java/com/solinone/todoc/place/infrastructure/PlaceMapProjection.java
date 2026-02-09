@@ -1,5 +1,7 @@
 package com.solinone.todoc.place.infrastructure;
 
+import com.solinone.todoc.place.domain.PlaceType;
+
 public interface PlaceMapProjection {
     Long getPlaceId();
     String getPlaceName();
@@ -7,4 +9,5 @@ public interface PlaceMapProjection {
     Double getLongitude();
     Long getContentCount();
     String getAddress();
+    PlaceType getPlaceType();
 }

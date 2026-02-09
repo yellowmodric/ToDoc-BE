@@ -1,6 +1,7 @@
 package com.solinone.todoc.place.dto.response;
 
 import com.solinone.todoc.place.domain.Place;
+import com.solinone.todoc.place.domain.PlaceType;
 import com.solinone.todoc.place.infrastructure.PlaceMapProjection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class PlaceMapResponse {
     private double longitude;
     private long contentCount;
     private String address;
+    private PlaceType placeType;
 
     //방명록 정보
     private MyContentStatus myStatus;
@@ -30,7 +32,8 @@ public class PlaceMapResponse {
             double latitude,
             double longitude,
             long contentCount,
-            String address
+            String address,
+            PlaceType placeType
     ) {
         this.placeId = placeId;
         this.placeName = placeName;
@@ -38,6 +41,7 @@ public class PlaceMapResponse {
         this.longitude = longitude;
         this.contentCount = contentCount;
         this.address = address;
+        this.placeType = placeType;
     }
 
     public static PlaceMapResponse from(PlaceMapProjection place) {
@@ -47,7 +51,8 @@ public class PlaceMapResponse {
                 place.getLatitude(),
                 place.getLongitude(),
                 place.getContentCount(),
-                place.getAddress()
+                place.getAddress(),
+                place.getPlaceType()
         );
     }
 }
