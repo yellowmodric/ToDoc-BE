@@ -1,4 +1,6 @@
 spring:
+  servlet:
+    context-
   application:
     name: todoc
   #porfiles
@@ -20,7 +22,7 @@ springdoc:
     path: /api-docs
     enabled: true
   swagger-ui:
-    path: /swagger-ui.html
+    path: /api/swagger-ui.html
     enabled: true
     operations-sorter: method
     tags-sorter: alpha
