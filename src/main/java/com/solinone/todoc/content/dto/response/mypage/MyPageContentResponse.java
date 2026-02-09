@@ -14,6 +14,8 @@ public class MyPageContentResponse {
     private String theme_url;
     private Long fontId;
     private LocalDateTime createdAt;
+    private Long placeId;
+    private String placeName;
 
     public static MyPageContentResponse from(Content content) {
         return new MyPageContentResponse(
@@ -21,7 +23,9 @@ public class MyPageContentResponse {
                 content.getContent(),
                 content.getThemeUrl(),
                 content.getFont().getFontId(),
-                content.getCreatedAt()
+                content.getCreatedAt(),
+                content.getBoard().getPlace().getPlaceId(),
+                content.getBoard().getPlace().getPlaceName()
         );
     }
 }
