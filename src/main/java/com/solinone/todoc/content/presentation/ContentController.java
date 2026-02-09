@@ -1,11 +1,9 @@
 package com.solinone.todoc.content.presentation;
 
 import com.solinone.todoc.content.application.ContentService;
-import com.solinone.todoc.content.application.MyContentService;
 import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.request.ContentDeleteRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
-import com.solinone.todoc.content.dto.response.MyPageContentResponse;
 import com.solinone.todoc.global.response.ApiResponse;
 import com.solinone.todoc.global.response.MessageResponse;
 import com.solinone.todoc.global.security.CustomUserDetails;
@@ -16,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")

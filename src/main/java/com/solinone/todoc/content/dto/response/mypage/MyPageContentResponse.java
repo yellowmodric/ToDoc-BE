@@ -1,4 +1,4 @@
-package com.solinone.todoc.content.dto.response;
+package com.solinone.todoc.content.dto.response.mypage;
 
 import com.solinone.todoc.content.domain.Content;
 import lombok.AllArgsConstructor;
