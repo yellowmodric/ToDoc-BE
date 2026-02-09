@@ -17,6 +17,8 @@ public class ContentCreateResponse {
     private String content;
     private Long fontId;
     private String fontName;
+    private String fontField;
+    private String fontCategory;
     private String themeUrl;
 
     @JsonFormat(pattern = "yy.MM.dd HH:mm")
@@ -29,6 +31,8 @@ public class ContentCreateResponse {
                 .content(content.getContent())
                 .fontId(content.getFont().getFontId())
                 .fontName(content.getFont().getFontName())
+                .fontField(content.getFont().getField().toString())
+                .fontCategory(content.getFont().getCategory().toString())
                 .themeUrl(content.getThemeUrl())
                 .createdAt(content.getCreatedAt())
                 .placeName(placeName)
