@@ -8,7 +8,6 @@ import com.solinone.todoc.content.exception.ContentAccessDeniedException;
 import com.solinone.todoc.content.exception.ContentNotFoundException;
 import com.solinone.todoc.content.infrastructure.ContentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
