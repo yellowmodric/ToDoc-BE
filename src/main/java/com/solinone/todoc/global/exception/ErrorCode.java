@@ -26,6 +26,7 @@ public enum ErrorCode {
     CONTENT_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "CT001", "방명록 생성자는 방명록 작성이 불가합니다."),
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND, "CT002", "방명록을 찾을 수 없습니다."),
     CONTENT_DELETE_DENIED(HttpStatus.BAD_REQUEST, "CT003", "본인 가게의 방명록만 삭제할 수 있습니다."),
+    CONTENT_PROVIDER_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "CT004", "본인가게의 방명록만 조회가능합니다."),
 
     //user (U)
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "U001", "이미 사용 중인 이메일입니다"),

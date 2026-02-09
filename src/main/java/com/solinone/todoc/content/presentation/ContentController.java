@@ -1,5 +1,6 @@
 package com.solinone.todoc.content.presentation;
 
+import com.solinone.todoc.board.dto.response.ProviderContentsResponse;
 import com.solinone.todoc.content.application.ContentService;
 import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.request.ContentDeleteRequest;
@@ -44,5 +45,21 @@ public class ContentController {
         contentService.deleteContents(request.getContentIds(), userDetails.getUserId());
 
         return ApiResponse.success(new MessageResponse("방명록 삭제 완료"));
+    }
+
+    @GetMapping("/provider/places/{placeId}/contents")
+    @PreAuthorize("hasRole('PROVIDER')")
+    @Operation(summary = "사장님 방명록 조회 (웹 - paging, 모바일 - cursor)")
+    public ApiResponse<ProviderContentsResponse> getPlaceContents(
+            @PathVariable("placeId") Long placeId,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "desc") String sort,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        ProviderContentsResponse response = contentService.getPlaceContents(
+                placeId, userDetails.getUserId(), page, cursor, size, sort);
+        return ApiResponse.success(response);
     }
 }
