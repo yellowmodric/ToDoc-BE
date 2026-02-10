@@ -250,6 +250,9 @@ public class ContentService {
         }
         log.info("끌어올리기 위치 검증 성공 - placeId: {}, contentId: {}, distance: {}m", placeId, content.getContentId(), distance);
 
+        if (content.getUser() == null) {
+            throw new ContentUserNotMatchException();
+        }
         if (!Objects.equals(content.getUser().getUserId(), userId)) {
             throw new  ContentUserNotMatchException();
         }
