@@ -2,6 +2,7 @@ package com.solinone.todoc.content.presentation;
 
 import com.solinone.todoc.board.dto.response.ProviderContentsResponse;
 import com.solinone.todoc.content.application.ContentService;
+import com.solinone.todoc.content.dto.request.ContentBoostRequest;
 import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.request.ContentDeleteRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
@@ -65,5 +66,18 @@ public class ContentController {
         ProviderContentsResponse response = contentService.getPlaceContents(
                 placeId, userDetails.getUserId(), page, cursor, size, sort);
         return ApiResponse.success(response);
+    }
+
+    @PostMapping("/boards/{placeId}/contents/boost")
+    @PreAuthorize("hasRole('VISITOR')")
+    @Operation(summary = "방명록 끌어올리기")
+    public ApiResponse<MessageResponse> boostContent(
+            @PathVariable("placeId") Long placeId,
+            @Valid @RequestBody ContentBoostRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        contentService.boostContent(placeId, request,userDetails.getUserId());
+
+        return ApiResponse.success(new MessageResponse("방명록 끌어올리기 완료"));
     }
 }

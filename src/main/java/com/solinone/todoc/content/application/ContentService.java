@@ -1,6 +1,7 @@
 package com.solinone.todoc.content.application;
 
 import com.solinone.todoc.board.domain.Board;
+import com.solinone.todoc.content.dto.request.ContentBoostRequest;
 import com.solinone.todoc.board.dto.response.*;
 import com.solinone.todoc.board.exception.BoardNotFoundException;
 import com.solinone.todoc.board.infrastructure.BoardRepository;
@@ -60,8 +61,8 @@ public class ContentService {
                 request.getUserLongitude()
         );
 
-        //범위 체크 (100m 이내)
-        if (!LocationUtils.isWithinRange(distance, 50)) {
+        //범위 체크 (150m 이내)
+        if (!LocationUtils.isWithinRange(distance, 150)) {
             log.warn("위치 범위 초과 - placeId: {}, distance: {}m", placeId, distance);
             throw new LocationOutOfRangeException();
         }
@@ -223,5 +224,36 @@ public class ContentService {
         log.info("방명록 커서 조회 - boardId: {}, cursor: {}, size: {}, hasNext: {}", boardId, cursor, size, !isLast);
 
         return CursorResponse.of(contentResponses, nextCursor, isLast, totalElements);
+    }
+
+    @Transactional
+    public void boostContent(Long placeId, ContentBoostRequest request, Long userId) {
+        Content content = contentRepository.findById(request.getContentId())
+                .orElseThrow(ContentNotFoundException::new);
+
+        if (!Objects.equals(content.getBoard().getPlace().getPlaceId(), placeId)) {
+            throw new ContentPlaceNotMatchException();
+        }
+
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(PlaceNotFoundException::new);
+
+        double distance = LocationUtils.calculateDistance(
+                place.getLatitude(),
+                place.getLongitude(),
+                request.getUserLatitude(),
+                request.getUserLongitude()
+        );
+        if (!LocationUtils.isWithinRange(distance, 150)) {
+            log.warn("끌어올리기 범위 초과 - placeId: {}, distance: {}m",  placeId, distance);
+            throw new LocationOutOfRangeException();
+        }
+        log.info("끌어올리기 위치 검증 성공 - placeId: {}, contentId: {}, distance: {}m", placeId, content.getContentId(), distance);
+
+        if (!Objects.equals(content.getUser().getUserId(), userId)) {
+            throw new  ContentUserNotMatchException();
+        }
+
+        sseEmitterService.sendBoostedContent(placeId, content);
     }
 }

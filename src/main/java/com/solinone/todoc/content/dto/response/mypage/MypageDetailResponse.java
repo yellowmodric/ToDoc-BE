@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 @AllArgsConstructor
 public class MypageDetailResponse {
     private Long contentId;
+    private Long placeId;
     private String placeName;
     private String content;
     private String createdAt;
@@ -31,6 +32,7 @@ public class MypageDetailResponse {
     public static MypageDetailResponse from(Content content) {
         return new MypageDetailResponse(
                 content.getContentId(),
+                content.getBoard().getPlace().getPlaceId(),
                 content.getBoard().getPlace().getPlaceName(),
                 content.getContent(),
                 content.getCreatedAt().format(FORMATTER),

@@ -27,7 +27,9 @@ public enum ErrorCode {
     CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND, "CT002", "방명록을 찾을 수 없습니다."),
     CONTENT_DELETE_DENIED(HttpStatus.BAD_REQUEST, "CT003", "본인 가게의 방명록만 삭제할 수 있습니다."),
     CONTENT_PROVIDER_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "CT004", "본인가게의 방명록만 조회가능합니다."),
-    LOCATION_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "CT005", "가게 근처에서만 방명록을 작성할 수 있습니다."),
+    LOCATION_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "CT005", "가게 근처에서만 가능합니다."),
+    CONTENT_PLACE_NOT_MATCH(HttpStatus.BAD_REQUEST, "CT006", "해당 가게의 방명록이 아닙니다."),
+    CONTENT_USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "CT007", "본인의 방명록만 끌어올릴 수 있습니다."),
 
     //user (U)
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "U001", "이미 사용 중인 이메일입니다"),
