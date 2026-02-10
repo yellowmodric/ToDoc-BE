@@ -9,14 +9,12 @@ import com.solinone.todoc.content.dto.request.ContentCreateRequest;
 import com.solinone.todoc.content.dto.response.ContentCreateResponse;
 import com.solinone.todoc.content.dto.response.CursorResponse;
 import com.solinone.todoc.content.dto.response.PageResponse;
-import com.solinone.todoc.content.exception.ContentAccessDeniedException;
-import com.solinone.todoc.content.exception.ContentDeleteDeniedException;
-import com.solinone.todoc.content.exception.ContentNotFoundException;
-import com.solinone.todoc.content.exception.ContentProviderAccessDeniedException;
+import com.solinone.todoc.content.exception.*;
 import com.solinone.todoc.content.infrastructure.ContentRepository;
 import com.solinone.todoc.font.domain.Font;
 import com.solinone.todoc.font.exception.FontNotFoundException;
 import com.solinone.todoc.font.infrastructure.FontRepository;
+import com.solinone.todoc.global.util.LocationUtils;
 import com.solinone.todoc.infrastructure.sse.SseEmitterService;
 import com.solinone.todoc.place.domain.Place;
 import com.solinone.todoc.place.exception.PlaceNotFoundException;
@@ -53,6 +51,22 @@ public class ContentService {
 
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(PlaceNotFoundException::new);
+
+        //거리 계산
+        double distance = LocationUtils.calculateDistance(
+                place.getLatitude(),
+                place.getLongitude(),
+                request.getUserLatitude(),
+                request.getUserLongitude()
+        );
+
+        //범위 체크 (100m 이내)
+        if (!LocationUtils.isWithinRange(distance, 50)) {
+            log.warn("위치 범위 초과 - placeId: {}, distance: {}m", placeId, distance);
+            throw new LocationOutOfRangeException();
+        }
+
+        log.info("위치 검증 성공 - placeId: {}, distance: {}m", placeId, distance);
 
         if (Objects.equals(place.getUser().getUserId(), userId)) {
             throw new ContentAccessDeniedException();
