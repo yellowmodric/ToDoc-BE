@@ -109,6 +109,7 @@ public class BoardService {
         return ProviderHomeResponse.of(responses);
     }
 
+    @Transactional(readOnly = true)
     public BoardDetailResponse getBoardByPlaceId(Long placeId) {
 
         Board board = boardRepository.findByPlacePlaceId(placeId)

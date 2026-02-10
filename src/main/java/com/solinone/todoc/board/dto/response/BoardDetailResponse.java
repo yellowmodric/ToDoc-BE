@@ -13,6 +13,7 @@ public class BoardDetailResponse {
     private Long boardId;
     private Long themeId;
     private String qrUrl;
+    private String placeName;
     private List<ContentResponse> contents;
 
     public static BoardDetailResponse of(Board board, List<ContentResponse> contents) {
@@ -20,6 +21,7 @@ public class BoardDetailResponse {
                 .boardId(board.getBoardId())
                 .themeId(board.getTheme().getThemeId())
                 .qrUrl(board.getQrUrl())
+                .placeName(board.getPlace().getPlaceName())
                 .contents(contents)
                 .build();
     }
