@@ -3,8 +3,11 @@ package com.solinone.todoc.user.application;
 import com.solinone.todoc.global.security.CustomUserDetails;
 import com.solinone.todoc.global.security.jwt.JwtTokenProvider;
 import com.solinone.todoc.place.application.PlaceService;
+import com.solinone.todoc.place.domain.Place;
 import com.solinone.todoc.place.dto.request.PlaceCreateRequest;
+import com.solinone.todoc.place.infrastructure.PlaceRepository;
 import com.solinone.todoc.user.domain.User;
+import com.solinone.todoc.user.domain.UserRole;
 import com.solinone.todoc.user.dto.request.LoginRequest;
 import com.solinone.todoc.user.dto.request.ProviderSignupRequest;
 import com.solinone.todoc.user.dto.request.VisitorSignupRequest;
@@ -23,6 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -33,6 +39,7 @@ public class UserService {
     private final PlaceService placeService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PlaceRepository placeRepository;
 
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
@@ -82,9 +89,17 @@ public class UserService {
 
             String accessToken = jwtTokenProvider.generateToken(authentication);
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            List<Long> placeIds = null;
+            if (userDetails.getUser().getRole() == UserRole.PROVIDER) {
+                placeIds = placeRepository.findAllByUserUserId(userDetails.getUserId())
+                        .stream()
+                        .map(Place::getPlaceId)
+                        .collect(Collectors.toList());
+            }
             log.info("로그인 성공 - userId: {}, email: {} ", userDetails.getUserId(), request.getEmail());
 
-            return LoginResponse.of(accessToken, jwtExpiration / 1000, userDetails);
+            return LoginResponse.of(accessToken, jwtExpiration / 1000, userDetails, placeIds);
         } catch (AuthenticationException e) {
             log.error("로그인 실패: {}", request.getEmail(), e);
             throw new InvalidCredentialException();
