@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @AllArgsConstructor
@@ -13,7 +14,10 @@ public class LatestContentResponse {
     private String content;
     private String themeUrl;
     private Long fontId;
-    private LocalDateTime createdAt;
+    private String createdAt;
+
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yy.MM.dd HH:mm");
 
     public static LatestContentResponse from(Content content) {
         return new LatestContentResponse(
@@ -21,7 +25,7 @@ public class LatestContentResponse {
                 content.getContent(),
                 content.getThemeUrl(),
                 content.getFont().getFontId(),
-                content.getCreatedAt()
+                content.getCreatedAt().format(FORMATTER)
         );
     }
 }
