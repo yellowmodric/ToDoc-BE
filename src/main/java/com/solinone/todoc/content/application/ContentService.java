@@ -60,8 +60,8 @@ public class ContentService {
                 request.getUserLongitude()
         );
 
-        //범위 체크 (100m 이내)
-        if (!LocationUtils.isWithinRange(distance, 50)) {
+        //범위 체크 (150m 이내)
+        if (!LocationUtils.isWithinRange(distance, 150)) {
             log.warn("위치 범위 초과 - placeId: {}, distance: {}m", placeId, distance);
             throw new LocationOutOfRangeException();
         }
