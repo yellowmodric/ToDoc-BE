@@ -52,7 +52,7 @@ public class FontReasonPromptFactory {
                   }
                 }
                 - 다른 설명 없이 결과만 출력
-                """.formatted(input, fonts);
+                """.formatted(input, formatFonts(fonts));
     }
 
     private String formatFonts(List<FontWithCategory> fonts) {
