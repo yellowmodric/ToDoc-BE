@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,7 +36,10 @@ public class SseEmitterService {
         //연결 종료 시 제거
         emitter.onCompletion(() -> removeEmitter(placeId, emitter));
         emitter.onTimeout(() -> removeEmitter(placeId, emitter));
-        emitter.onError(e -> removeEmitter(placeId, emitter));
+        emitter.onError(e -> {
+            log.warn("SSE 에러 발생 - placeId: {}", placeId, e);
+            removeEmitter(placeId, emitter);
+        });
 
         //연결 직후 더미 이벤트 전송 (연결 확인용)
         try {
@@ -55,25 +59,25 @@ public class SseEmitterService {
      */
     public void sendNewContent(Long placeId, Content content) {
         //전송 데이터 구성
-        Map<String, Object> data = Map.of(
-                "contentId", content.getContentId(),
-                "content", content.getContent(),
-                "contentLength", content.getContent().length(),
-                "fontId", content.getFont().getFontId(),
-                "themeUrl", content.getThemeUrl(),
-                "createdAt", content.getCreatedAt().format(formatter)
-        );
+        Map<String, Object> data = new HashMap<>();
+            data.put("contentId", content.getContentId());
+            data.put("content", content.getContent());
+            data.put("contentLength", content.getContent().length());
+            data.put("fontId", content.getFont().getFontId());
+            data.put("themeUrl", content.getThemeUrl());
+            data.put("createdAt", content.getCreatedAt().format(formatter));
+
         sendToPlace(placeId, "new-content", data);
     }
 
     public void sendBoostedContent(Long placeId, Content content) {
-        Map<String, Object> data = Map.of(
-                "contentId", content.getContentId(),
-                "content", content.getContent(),
-                "fontId",  content.getFont().getFontId(),
-                "themeUrl", content.getThemeUrl(),
-                "boostedAt", LocalDateTime.now().format(formatter)
-        );
+        Map<String, Object> data = new HashMap<>();
+            data.put("contentId", content.getContentId());
+            data.put("content", content.getContent());
+            data.put("fontId",  content.getFont().getFontId());
+            data.put("themeUrl", content.getThemeUrl());
+            data.put("boostedAt", LocalDateTime.now().format(formatter));
+
         sendToPlace(placeId, "boost-content", data);
     }
 
@@ -95,7 +99,7 @@ public class SseEmitterService {
                         .name(eventName)
                         .data(data));
                 successCount++;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.warn("SSE 전송 실패 - placeId: {}, event: {}", placeId, eventName, e);
                 removeEmitter(placeId, emitter);
                 failCount++;
