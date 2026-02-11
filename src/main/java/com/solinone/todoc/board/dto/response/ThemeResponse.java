@@ -34,6 +34,7 @@ public class ThemeResponse {
 
         if (themeId == 5) {
             return List.of(baseUrl + "5/1.png");
+            
         }
 
         return List.of(
