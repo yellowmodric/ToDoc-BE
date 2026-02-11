@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,8 +21,7 @@ public class SseEmitterService {
 
     private static final Long DEFAULT_TIMEOUT = 60 * 60 * 1000L;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-    private final Map<Long, List<SseEmitter>> emitters = new ConcurrentHashMap<>();
+    private final Map<Long, Set<SseEmitter>> emitters = new ConcurrentHashMap<>();
 
     /**
      * SSE 연결 생성
@@ -31,13 +31,13 @@ public class SseEmitterService {
 
         // placeId에 해당하는 emitter 리스트에 추가
         //computeIfAbsent: key 없으면 새 리스트 생성 후 추가
-        emitters.computeIfAbsent(placeId, k -> new CopyOnWriteArrayList<>()).add(emitter);
+        emitters.computeIfAbsent(placeId, k -> ConcurrentHashMap.newKeySet()).add(emitter);
 
         //연결 종료 시 제거
         emitter.onCompletion(() -> removeEmitter(placeId, emitter));
         emitter.onTimeout(() -> removeEmitter(placeId, emitter));
         emitter.onError(e -> {
-            log.warn("SSE 에러 발생 - placeId: {}", placeId, e);
+            log.debug("SSE 에러 발생 - placeId: {}", placeId, e);
             removeEmitter(placeId, emitter);
         });
 
@@ -46,7 +46,7 @@ public class SseEmitterService {
             emitter.send(SseEmitter.event()
                             .name("connect")
                     .data("Connected to place: " + placeId));
-            log.info("SSE 연결 생성 - placeId: {}, 현재 연결 수: {} ", placeId, getEmitterCount(placeId));
+            log.debug("SSE 연결 생성 - placeId: {}, 현재 연결 수: {} ", placeId, getEmitterCount(placeId));
         } catch (IOException e) {
             log.error("SSE 연결 확인 이벤트 전송 실패 - placeId: {}", placeId, e);
             removeEmitter(placeId, emitter);
@@ -82,15 +82,14 @@ public class SseEmitterService {
     }
 
     private void sendToPlace(Long placeId, String eventName, Object data) {
-        List<SseEmitter> placeEmitters = emitters.get(placeId);
+        Set<SseEmitter> placeEmitters = emitters.get(placeId);
 
         if (placeEmitters == null || placeEmitters.isEmpty()) {
-            log.info("전송할 SSE 연결 없음 - placeId: {}", placeId);
             return;
         }
 
         int successCount = 0;
-        int failCount = 0;
+        Set<SseEmitter> deadEmitters = ConcurrentHashMap.newKeySet();
 
         //모든 연결에 이벤트 전송
         for (SseEmitter emitter : placeEmitters) {
@@ -100,21 +99,24 @@ public class SseEmitterService {
                         .data(data));
                 successCount++;
             } catch (Exception e) {
-                log.warn("SSE 전송 실패 - placeId: {}, event: {}", placeId, eventName, e);
-                removeEmitter(placeId, emitter);
-                failCount++;
+                deadEmitters.add(emitter);
             }
         }
-        log.info("SSE 이벤트 전송 완료 - placeId: {}, event: {}, 성공: {}, 실패: {}",
-                placeId, eventName, successCount, failCount);
+
+        //실패한 연결 일괄 제거
+        deadEmitters.forEach(emitter -> removeEmitter(placeId, emitter));
+
+        if (!deadEmitters.isEmpty()) {
+            log.debug("SSE 전송 - placeId: {}, 성공: {}, 실패: {}",
+                    placeId, successCount, deadEmitters.size());
+        }
     }
 
     //Emitter 제거
     private void removeEmitter(Long placeId, SseEmitter emitter) {
-        List<SseEmitter> placeEmitters = emitters.get(placeId);
+        Set<SseEmitter> placeEmitters = emitters.get(placeId);
         if (placeEmitters != null) {
             placeEmitters.remove(emitter);
-            log.debug("SSE 연결 제거 - placeId: {}, 남은 연결 수: {}",  placeId, placeEmitters.size());
 
             //연결이 없으면 Map에서도 제거
             if (placeEmitters.isEmpty()) {
@@ -124,7 +126,7 @@ public class SseEmitterService {
     }
 
     private int getEmitterCount(Long placeId) {
-        List<SseEmitter> placeEmitters = emitters.get(placeId);
+        Set<SseEmitter> placeEmitters = emitters.get(placeId);
         return placeEmitters != null ? placeEmitters.size() : 0;
     }
 }
