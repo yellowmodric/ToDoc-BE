@@ -54,8 +54,7 @@ public enum ErrorCode {
     //Map (M)
     INVALID_LOCATION(HttpStatus.BAD_REQUEST, "M001", "유효하지 않은 위치 정보입니다"),
     INVALID_RADIUS(HttpStatus.BAD_REQUEST, "M002", "유효하지 않은 반경 값입니다");
-
-
+    
     private final HttpStatus httpStatus;
     private final String errorCode;
     private final String message;
