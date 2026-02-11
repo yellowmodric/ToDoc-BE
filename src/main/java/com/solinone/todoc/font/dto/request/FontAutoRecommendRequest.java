@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class FontAutoRecommendRequest {
     @NotBlank
     private String content;
+    private Long boardId;
 }

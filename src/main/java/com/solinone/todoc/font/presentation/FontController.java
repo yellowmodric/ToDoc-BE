@@ -8,6 +8,7 @@ import com.solinone.todoc.font.domain.AnalysisType;
 import com.solinone.todoc.font.domain.FontCategory;
 import com.solinone.todoc.font.dto.request.FontAutoRecommendRequest;
 import com.solinone.todoc.font.dto.response.FontAutoRecommendResponse;
+import com.solinone.todoc.font.dto.response.FontRecommendResponse;
 import com.solinone.todoc.font.dto.response.FontResponse;
 import com.solinone.todoc.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,24 +43,23 @@ public class FontController {
 
     @PostMapping("/recommend/auto")
     @Operation(summary = "방명록 내용 기반 AI 폰트 추천")
-    public ApiResponse<FontAutoRecommendResponse> autoRecommend (
+    public ApiResponse<FontRecommendResponse> autoRecommend (
             @Valid @RequestBody FontAutoRecommendRequest request
             ) {
         //1. AI 감정 분석(방명록 내용 기반)
         List<FontCategory> categories =
                 fontEmotionAnalysisService.analyze(request.getContent(), AnalysisType.GUESTBOOK);
 
-        //2. 폰트 추천
-        List<FontResponse> fonts =
-                fontAutoRecommendService.recommend(
+        //2. 폰트 추천 + 테마 미리보기
+        FontRecommendResponse response =
+                fontAutoRecommendService.recommendWithTheme(
+                        request.getBoardId(),
                         request.getContent(),
                         categories
-                        );
+                );
 
         //3. UI 기준 응답
-        return ApiResponse.success(
-                FontAutoRecommendResponse.of(fonts)
-        );
+        return ApiResponse.success(response);
     }
 
     @GetMapping("/recommend/search")
