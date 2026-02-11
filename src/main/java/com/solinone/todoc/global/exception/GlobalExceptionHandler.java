@@ -1,6 +1,7 @@
 package com.solinone.todoc.global.exception;
 
 import com.solinone.todoc.global.response.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,13 +121,25 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
-        log.error("[예외 발생] : {}, {}, {}", ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus(), ErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(), ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
+    public ResponseEntity<ErrorResponse> handleGenericException(
+            Exception e,
+            HttpServletRequest request
+    ) {
+        log.error(" [Unhandled Exception]", e);
+
+        //SSE 요청이면 스킵
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("text/event-stream")) {
+            log.error("[SSE 예외] {}: {}", e.getClass().getSimpleName(), e.getMessage(),e);
+            return null;
+        }
+
         ErrorResponse errorResponse = new ErrorResponse(
                 ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus(),
                 ErrorCode.INTERNAL_SERVER_ERROR.getErrorCode(),
-                ErrorCode.INTERNAL_SERVER_ERROR.getMessage()
+                e.getMessage()
         );
+
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

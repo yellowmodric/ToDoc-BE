@@ -248,7 +248,7 @@ public class ContentService {
             log.warn("끌어올리기 범위 초과 - placeId: {}, distance: {}m",  placeId, distance);
             throw new LocationOutOfRangeException();
         }
-        log.info("끌어올리기 위치 검증 성공 - placeId: {}, contentId: {}, distance: {}m", placeId, content.getContentId(), distance);
+        log.info("끌어올리기 위치 검증 - placeId: {}, contentId: {}, distance: {}m", placeId, content.getContentId(), distance);
 
         if (content.getUser() == null) {
             throw new ContentUserNotMatchException();
