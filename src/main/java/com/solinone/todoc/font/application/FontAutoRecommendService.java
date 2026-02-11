@@ -1,9 +1,14 @@
 package com.solinone.todoc.font.application;
 
+import com.solinone.todoc.board.application.ThemeUrlResolver;
+import com.solinone.todoc.board.domain.Board;
+import com.solinone.todoc.board.exception.BoardNotFoundException;
+import com.solinone.todoc.board.infrastructure.BoardRepository;
 import com.solinone.todoc.font.application.ai.FontReasonPromptFactory;
 import com.solinone.todoc.font.application.ai.FontWithCategory;
 import com.solinone.todoc.font.domain.Font;
 import com.solinone.todoc.font.domain.FontCategory;
+import com.solinone.todoc.font.dto.response.FontRecommendResponse;
 import com.solinone.todoc.font.dto.response.FontResponse;
 import com.solinone.todoc.font.exception.FontReasonGenerateException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +22,8 @@ import java.util.Map;
 public class FontAutoRecommendService {
     private final FontRecommendationService recommendationService;
     private final FontReasonGenerateService fontReasonGenerateService;
+    private final BoardRepository boardRepository;
+    private final ThemeUrlResolver themeUrlResolver;
 
     public List<FontResponse> recommend(
             String input,
@@ -55,5 +62,29 @@ public class FontAutoRecommendService {
                                 finalReasons.get(font.getFontName())
                         ))
                 .toList();
+    }
+
+    public FontRecommendResponse recommendWithTheme(
+            Long boardId,
+            String input,
+            List<FontCategory> categories
+    ) {
+        //1. board 조회
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
+
+        //2. themeUrl 결정
+        String themeUrl =
+                themeUrlResolver.resolve(board.getTheme().getThemeId());
+
+        //3. 기존 추천 로직 재사용
+        List<FontResponse> fonts =
+                recommend(input, categories);
+
+        //4. 최종 응답
+        return FontRecommendResponse.builder()
+                .themeUrl(themeUrl)
+                .fonts(fonts)
+                .build();
     }
 }
